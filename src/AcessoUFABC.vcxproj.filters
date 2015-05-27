@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Visual">
+      <UniqueIdentifier>{0cbb1e24-6ef7-4c7e-bc68-edc1823495ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IVisual">
+      <UniqueIdentifier>{136b9425-a51d-4223-883d-f1ef499784ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{6cf70329-5c1d-402e-a087-d12ba5b87e12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Keypad">
+      <UniqueIdentifier>{ac4b2781-810e-423c-9eb9-287e3dfa90eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Keypad">
+      <UniqueIdentifier>{1b4adf56-3660-419e-a913-aaab0c4af544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IIDProvider">
+      <UniqueIdentifier>{4c573002-6cc6-4029-85a7-22201b0db8af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IIDProvider">
+      <UniqueIdentifier>{400b763c-fe2d-436e-8ea1-744d5e682d8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DateTime">
+      <UniqueIdentifier>{e12c5d46-d52f-4774-8aca-662acfdaac98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\View">
+      <UniqueIdentifier>{7041c75b-e433-40fb-9ad9-0c4043bbae67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\View">
+      <UniqueIdentifier>{2a148612-6aec-409f-a9ea-c91a962d4085}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DateTime">
+      <UniqueIdentifier>{e54e12af-de82-4650-b38d-7a755ae10470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Menu">
+      <UniqueIdentifier>{6f0b2a15-52e9-443a-92aa-9801ad8ec5b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Menu">
+      <UniqueIdentifier>{c4a05399-1580-4269-9518-65f4e7974c88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IAccessRegWriter">
+      <UniqueIdentifier>{61c8bda9-b4a0-4c74-b7c8-30b099b6dcc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IAccessRegWriter">
+      <UniqueIdentifier>{0cd513cd-4456-4fc6-98df-619437d1af53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Access">
+      <UniqueIdentifier>{9b44feb2-5011-49ea-aabb-0f4ab7773392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Access">
+      <UniqueIdentifier>{7f316d06-6a92-4410-8abe-05ea857cc19f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AcessoUFABC.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Visual Micro\.AcessoUFABC.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IVisual.h">
+      <Filter>Header Files\IVisual</Filter>
+    </ClInclude>
+    <ClInclude Include="LedsVisual.h">
+      <Filter>Header Files\IVisual</Filter>
+    </ClInclude>
+    <ClInclude Include="CompositiveVisual.h">
+      <Filter>Header Files\IVisual</Filter>
+    </ClInclude>
+    <ClInclude Include="BuzzerVisual.h">
+      <Filter>Header Files\IVisual</Filter>
+    </ClInclude>
+    <ClInclude Include="EventArgs.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventFunctor.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecificEventFunctor.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyPadListener.h">
+      <Filter>Header Files\Keypad</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyDownEventArgs.h">
+      <Filter>Header Files\Keypad</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyPadLongPressListener.h">
+      <Filter>Header Files\Keypad</Filter>
+    </ClInclude>
+    <ClInclude Include="IIDProvider.h">
+      <Filter>Header Files\IIDProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="MifareIDProvider.h">
+      <Filter>Header Files\IIDProvider</Filter>
+    </ClInclude>
+    <ClInclude Include="IMifareIDProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewBase.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="IdleView.h">
+      <Filter>Header Files\View</Filter>
+    </ClInclude>
+    <ClInclude Include="IDateTimeProvider.h">
+      <Filter>Header Files\DateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="RTCDateTimeProvider.h">
+      <Filter>Header Files\DateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="Visual Micro\.acessouniversidadefederaldoabc.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuPanelView.h">
+      <Filter>Header Files\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IAccessRegWriter.h">
+      <Filter>Header Files\IAccessRegWriter</Filter>
+    </ClInclude>
+    <ClInclude Include="EepromAccessRegWriter.h">
+      <Filter>Header Files\IAccessRegWriter</Filter>
+    </ClInclude>
+    <ClInclude Include="AccessProvider.h">
+      <Filter>Header Files\Access</Filter>
+    </ClInclude>
+    <ClInclude Include="AccessReg.h">
+      <Filter>Header Files\Access</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkAccessProvider.h">
+      <Filter>Header Files\Access</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Visual Micro\.src.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BuzzerVisual.cpp">
+      <Filter>Source Files\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="CompositiveVisual.cpp">
+      <Filter>Source Files\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="LedsVisual.cpp">
+      <Filter>Source Files\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyPadListener.cpp">
+      <Filter>Source Files\Keypad</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyPadLongPressListener.cpp">
+      <Filter>Source Files\Keypad</Filter>
+    </ClCompile>
+    <ClCompile Include="MifareIDProvider.cpp">
+      <Filter>Source Files\IIDProvider</Filter>
+    </ClCompile>
+    <ClCompile Include="IdleView.cpp">
+      <Filter>Source Files\View</Filter>
+    </ClCompile>
+    <ClCompile Include="RTCDateTimeProvider.cpp">
+      <Filter>Source Files\DateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuPanelView.cpp">
+      <Filter>Source Files\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EepromAccessRegWriter.cpp">
+      <Filter>Source Files\IAccessRegWriter</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkAccessProvider.cpp">
+      <Filter>Source Files\Access</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
