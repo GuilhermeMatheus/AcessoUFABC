@@ -22,41 +22,28 @@ int NetworkAccessProvider::AllowAccess( byte& code )
 	{
 		_LOG("connected");
 
-		//21;99;0;1;0000000016533978;E;1;
 		String encoded = converter(code);
 
 		String postMessage = "";
-		postMessage += controllerPort + ';';
-		postMessage += System::SRV_getComputer() + ';';
+		postMessage += String(controllerPort, DEC) + ';';
+		postMessage += String(System::SRV_getComputer(), DEC) + ';';
 		postMessage += "0;1;";
 		postMessage += converter(code) + ';';
-		postMessage += "E;1;" + (char)0x0D;
+		postMessage += "E;1;" + String((char)0x0D);
 
-		_LOGS(encoded);
-		client.println(encoded);
+		_LOGS(postMessage);
+		client.print(postMessage);
+		
+		String response = client.readString();
+		_LOG("Response: ");
+		_LOGS(response);
 	}
 	else
 	{
 		_LOG("connection failed");
 	}
 
-
-
-
-	//if (client.connect(server, 80)) {
-
-	//}
 	return 1;
-	//while (true) {
-	//	client = server->available();
-	//	String serverResponse = client.readString();
-	//	String to = serverResponse.substring(3, 4);
-
-	//	if (to != String(controllerPort, DEC))
-	//		continue;
-	//	
-	//	return serverResponse[13] == 'L' ? 1 : -1;
-	//}
 }
 
 	
