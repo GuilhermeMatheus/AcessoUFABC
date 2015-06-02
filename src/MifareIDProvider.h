@@ -4,19 +4,19 @@
 #include "IIDProvider.h"
 #include "EventFunctor.h"
 #include "EventArgs.h"
+
 #include <MFRC522.h>
 
 class MifareIDProvider :
-	public IIDProvider
-{
+	public IIDProvider {
 protected:
-	MFRC522* reader;
+	MFRC522*				reader;
 
 public:
-	MifareIDProvider(MFRC522* reader);
+	MifareIDProvider( MFRC522* reader );
 
-	int GetNextID(byte &value);
-	void AddEventHandler(EventFunctor<EventArgs>* function);
+	int						GetNextID( byte &value );
+	void					AddEventHandler( EventFunctor<EventArgs>* function );
 };
 
 #endif /* MIFAREIDPROVIDER_H */

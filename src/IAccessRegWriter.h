@@ -3,20 +3,13 @@
 
 #include "AccessReg.h"
 
-class IAccessRegWriter
-{
+class IAccessRegWriter {
 public:
 
-	IAccessRegWriter() {
-
-	}
+	IAccessRegWriter() { }
 	
-	virtual int Write(AccessReg value) = 0;
-
-	virtual ~IAccessRegWriter()
-	{
-	}
-
+	virtual int				Write( AccessReg value ) = 0;
+	virtual					~IAccessRegWriter()	{ }
 };
 
 #endif /* IACCESSREGWRITER_H */
