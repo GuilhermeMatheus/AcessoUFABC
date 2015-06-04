@@ -44,10 +44,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\variants\standard;C:\Program Files (x86)\Arduino\libraries\EEPROM;C:\Program Files (x86)\Arduino\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\libraries\SPI;C:\Program Files (x86)\Arduino\libraries\SPI\utility;C:\Program Files (x86)\Arduino\libraries\Wire;C:\Program Files (x86)\Arduino\libraries\Wire\utility;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\;c:\program files (x86)\arduino\hardware\tools\avr\avr\include\avr\;c:\program files (x86)\arduino\hardware\tools\avr\avr\;c:\program files (x86)\arduino\hardware\tools\avr\lib\gcc\avr\4.3.2\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>C:\Users\gcosta\Documents\GitHub\AcessoUFABC\src\Visual Micro\.src.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\standard;C:\Users\Guilherme\Documents\GitHub\AcessoUFABC\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\libraries\Ethernet\src;C:\Program Files (x86)\Arduino\libraries\Ethernet\src\utility;C:\Users\Guilherme\Documents\Arduino\libraries\LiquidCrystal_I2C;C:\Users\Guilherme\Documents\Arduino\libraries\LiquidCrystal_I2C\utility;C:\Users\Guilherme\Documents\Arduino\libraries\rfid;C:\Users\Guilherme\Documents\Arduino\libraries\rfid\utility;C:\Users\Guilherme\Documents\Arduino\libraries\RTClib;C:\Users\Guilherme\Documents\Arduino\libraries\RTClib\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\default\debuggers;C:\Users\Guilherme\Documents\Arduino\libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>C:\Users\Guilherme\Documents\GitHub\AcessoUFABC\src\Visual Micro\.src.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>__AVR_ATmega328P__;ARDUINO=101;ARDUINO_MAIN;__AVR__;F_CPU=16000000L;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=160;ARDUINO_AVR_UNO;ARDUINO_ARCH_AVR;__cplusplus;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
       <AdditionalOptions>-D DEBUG %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -81,10 +81,7 @@
   <ItemGroup>
     <ClInclude Include="AccessProvider.h" />
     <ClInclude Include="AccessReg.h" />
-    <ClInclude Include="BuzzerVisual.h" />
-    <ClInclude Include="CompositiveVisual.h" />
     <ClInclude Include="EepromAccessRegWriter.h" />
-    <ClInclude Include="EventArgs.h" />
     <ClInclude Include="IDateTimeProvider.h" />
     <ClInclude Include="IdleView.h" />
     <ClInclude Include="IIDProvider.h" />
@@ -92,32 +89,20 @@
     <ClInclude Include="IMifareIDProvider.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClInclude Include="IVisual.h" />
-    <ClInclude Include="KeyDownEventArgs.h" />
     <ClInclude Include="KeyPadListener.h" />
-    <ClInclude Include="KeyPadLongPressListener.h" />
-    <ClInclude Include="LedsVisual.h" />
-    <ClInclude Include="EventFunctor.h" />
     <ClInclude Include="MenuPanelView.h" />
     <ClInclude Include="MifareIDProvider.h" />
     <ClInclude Include="NetworkAccessProvider.h" />
     <ClInclude Include="RTCDateTimeProvider.h" />
-    <ClInclude Include="SpecificEventFunctor.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="ViewBase.h" />
-    <ClInclude Include="Visual Micro\.AcessoUFABC.vsarduino.h" />
-    <ClInclude Include="Visual Micro\.acessouniversidadefederaldoabc.vsarduino.h" />
     <ClInclude Include="Visual Micro\.src.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BuzzerVisual.cpp" />
-    <ClCompile Include="CompositiveVisual.cpp" />
     <ClCompile Include="EepromAccessRegWriter.cpp" />
     <ClCompile Include="IdleView.cpp" />
     <ClCompile Include="KeyPadListener.cpp" />
-    <ClCompile Include="KeyPadLongPressListener.cpp" />
-    <ClCompile Include="LedsVisual.cpp" />
     <ClCompile Include="MenuPanelView.cpp" />
     <ClCompile Include="MifareIDProvider.cpp" />
     <ClCompile Include="NetworkAccessProvider.cpp" />

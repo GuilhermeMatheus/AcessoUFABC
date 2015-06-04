@@ -1,15 +1,12 @@
 #include "KeyPadListener.h"
 
-KeyPadListener::KeyPadListener(int8_t pinColumnOne, int8_t pinColumnTwo, int8_t pinColumnThree, int8_t maxFunctionsToCall)
+KeyPadListener::KeyPadListener(int8_t pinColumnOne, int8_t pinColumnTwo, int8_t pinColumnThree)
 {
 	this->actualFunctionIndex = this->cycle = 0;
 
 	this->pinColumnOne = pinColumnOne;
 	this->pinColumnTwo = pinColumnTwo;
 	this->pinColumnThree = pinColumnThree;
-	this->maxFunctionsToCall = maxFunctionsToCall;
-
-	//this->_function = (EventFunctor<KeyDownEventArgs>**)malloc(maxFunctionsToCall * sizeof(EventFunctor<KeyDownEventArgs>));
 
 	this->keyTable[0][0] = '1'; this->keyTable[1][0] = '2'; this->keyTable[2][0] = '3';
 	this->keyTable[0][1] = '4'; this->keyTable[1][1] = '5'; this->keyTable[2][1] = '6';
@@ -71,34 +68,6 @@ long KeyPadListener::GetPressTime(char c, long max)
 	return end - start;
 }
 
-void KeyPadListener::Listen()
-{
-
-	/*if (actualFunctionIndex == 0)
-		return;
-
-	cycle++;
-	int rowResult = -1;
-	char c = -1;
-
-	if ((rowResult = GetRowFromColumn(pinColumnOne)) != -1)
-		c = keyTable[0][rowResult];
-	else if ((rowResult = GetRowFromColumn(pinColumnTwo)) != -1)
-		c = keyTable[1][rowResult], 0;
-	else if ((rowResult = GetRowFromColumn(pinColumnThree)) != -1)
-		c = keyTable[2][rowResult], 0;
-	
-	if (rowResult != -1)
-	{
-		KeyDownEventArgs* e = new KeyDownEventArgs(c, cycle);
-
-		for (int i = 0; i < actualFunctionIndex; i++)
-			this->_function[i]->Call(e);
-
-		delete(e);
-	}*/
-}
-
 int KeyPadListener::GetRowFromColumn(int8_t column)
 {
 	int value = analogRead(column);
@@ -113,14 +82,6 @@ int KeyPadListener::GetRowFromColumn(int8_t column)
 		return ROW_4;
 
 	return -1;
-}
-
-void KeyPadListener::AddKeyDownEventHandler(EventFunctor<KeyDownEventArgs>* function)
-{
-	/*if (actualFunctionIndex >= maxFunctionsToCall)
-		return;
-
-	this->_function[actualFunctionIndex++] = function;*/
 }
 
 KeyPadListener::~KeyPadListener()

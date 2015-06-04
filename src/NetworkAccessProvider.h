@@ -1,10 +1,10 @@
 #ifndef   NETWORKACCESSPROVIDER_H
 #define   NETWORKACCESSPROVIDER_H
 
+#include <Ethernet.h>
+
 #include "AccessProvider.h"
 #include "System.h"
-
-#include <Ethernet.h>
 
 class NetworkAccessProvider :
 	public AccessProvider {
@@ -13,7 +13,7 @@ private:
 	int8_t					controllerPort;
 
 public:
-	NetworkAccessProvider( String ( *converter )( byte& ) );
+	NetworkAccessProvider(String(*converter)(byte&));
 
 	static void				begin();
 	int						AllowAccess( byte &code );

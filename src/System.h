@@ -2,8 +2,7 @@
 #define SYSTEM_H
 
 #include <Arduino.h>
-
-#include "RTClib.h"
+#include <RTClib.h>
 
 #define OFFSET_ACS_Password		 0
 #define OFFSET_NW_IsDHCP		 4
@@ -21,8 +20,7 @@
 #define LED_GREEN_PIN			 7
 #define BUZZER_PIN				 5
 
-class System
-{
+class System {
 private:
 	System();
 	~System();
@@ -30,21 +28,60 @@ public:
 
 	static void				begin();
 
-	#pragma region Visual
+
+/*
+===============================================================================
+Visual commands.
+===============================================================================
+*/
+#pragma region Visual
+	/**
+	* Turns off all leds.
+	*/
 	static void				LED_ALL_OFF();
 
+	/**
+	* Turns ON the Red led.
+	*/
 	static void				LED_RED_ON();
+	/**
+	* Turns OFF the Red led.
+	*/
 	static void				LED_RED_OFF();
+	/**
+	* Turns ON the Red led, pauses the program and then turns OFF the Red led.
+	* @param duration The number of milliseconds to pause.
+	*/
 	static void				LED_RED_BLINK( unsigned long duration = 100 );
 	
+	/**
+	* Turns ON the Red led.
+	*/
 	static void				LED_GREEN_ON();
+	/**
+	* Turns OFF the Red led.
+	*/
 	static void				LED_GREEN_OFF();
+	/**
+	* Turns ON the Green led, pauses the program and then turns OFF the Green led.
+	* @param duration The number of milliseconds to pause.
+	*/
 	static void				LED_GREEN_BLINK( unsigned long duration = 100 );
 	
+	/**
+	* Turns ON the buzzer, pauses the program and then turns OFF the buzzer.
+	* @param duration The number of milliseconds to pause.
+	*/
 	static void				BEEP( unsigned long duration = 100 );
-	#pragma endregion
+#pragma endregion
 
-	#pragma region Access
+
+/*
+===============================================================================
+Access settings.
+===============================================================================
+*/
+#pragma region Access
 	static bool				ACS_RevokeCard( uint32_t card );
 	static bool				ACS_AddCard( uint32_t card );
 
@@ -53,9 +90,15 @@ public:
 
 	static uint32_t			ACS_GetPassword();
 	static bool				ACS_SetPassword( uint32_t password );
-	#pragma endregion
+#pragma endregion
 
-	#pragma region Network
+
+/*
+===============================================================================
+Network settings.
+===============================================================================
+*/
+#pragma region Network
 	static bool				NW_getIsDHCP();
 	static bool				NW_setIsDHCP( bool value );
 	
@@ -67,9 +110,15 @@ public:
 
 	static uint32_t			NW_getGateway();
 	static bool				NW_setGateway( uint32_t value );
-	#pragma endregion
+#pragma endregion
 
-	#pragma region Server 
+
+/*
+===============================================================================
+Server settings.
+===============================================================================
+*/
+#pragma region Server 
 	static bool				SRV_loadIpAddressInto( byte target[4] );
 
 	static uint32_t			SRV_getIpAddress();
@@ -80,23 +129,35 @@ public:
 
 	static uint8_t			SRV_getComputer();
 	static bool				SRV_setComputer( uint8_t value );
-	#pragma endregion
+#pragma endregion
 
-	#pragma region Actuation 
+
+/*
+===============================================================================
+Actuation settings.
+===============================================================================
+*/
+#pragma region Actuation 
 	static bool				ACT_getType();
 	static bool				ACT_setType( bool value );
 
 	static uint16_t			ACT_getTime();
 	static bool				ACT_setTime( uint16_t value );
-	#pragma endregion
+#pragma endregion
 	
-	#pragma region DateTime 
+
+/*
+===============================================================================
+DateTime settings.
+===============================================================================
+*/
+#pragma region DateTime 
 	static DateTime			DT_getDateTime( RTC_DS1307 * rtc );
 	static bool				DT_setDateTime( DateTime value, RTC_DS1307 * rtc );
 
 	static uint32_t			DT_getNTPIpAddress();
 	static bool				DT_setNTPIpAddress( uint32_t value );
-	#pragma endregion
+#pragma endregion
 
 	static uint32_t			getUInt32Helper( int8_t address );
 	static bool				setUInt32Helper( uint32_t value, int8_t address );

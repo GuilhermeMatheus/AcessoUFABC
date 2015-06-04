@@ -21,14 +21,11 @@
 
 #include "System.h"
 #include "Arduino.h"
-#include "EventFunctor.h"
-#include "EventArgs.h"
-#include "KeyDownEventArgs.h"
 
 class KeyPadListener
 {
 private:
-	int8_t pinColumnOne, pinColumnTwo, pinColumnThree, maxFunctionsToCall, actualFunctionIndex;
+	int8_t pinColumnOne, pinColumnTwo, pinColumnThree, actualFunctionIndex;
 	uint32_t cycle;
 	
 protected:
@@ -36,15 +33,13 @@ protected:
 	int GetRowFromColumn(int8_t column);
 
 public:
-	KeyPadListener(int8_t pinColumnOne, int8_t pinColumnTwo, int8_t pinColumnThree, int8_t maxFunctionsToCall);
+	KeyPadListener(int8_t pinColumnOne, int8_t pinColumnTwo, int8_t pinColumnThree);
 	~KeyPadListener();
 
 	int16_t GetState();
 	char WaitForInput();
 	uint8_t WaitForDigitInput();
 	long GetPressTime(char c, long max);
-	void Listen();
-	void AddKeyDownEventHandler(EventFunctor<KeyDownEventArgs>* function);
 
 };
 

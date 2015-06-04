@@ -13,15 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Visual">
-      <UniqueIdentifier>{0cbb1e24-6ef7-4c7e-bc68-edc1823495ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\IVisual">
-      <UniqueIdentifier>{136b9425-a51d-4223-883d-f1ef499784ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Events">
-      <UniqueIdentifier>{6cf70329-5c1d-402e-a087-d12ba5b87e12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Keypad">
       <UniqueIdentifier>{ac4b2781-810e-423c-9eb9-287e3dfa90eb}</UniqueIdentifier>
     </Filter>
@@ -69,37 +60,7 @@
     <None Include="AcessoUFABC.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Visual Micro\.AcessoUFABC.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IVisual.h">
-      <Filter>Header Files\IVisual</Filter>
-    </ClInclude>
-    <ClInclude Include="LedsVisual.h">
-      <Filter>Header Files\IVisual</Filter>
-    </ClInclude>
-    <ClInclude Include="CompositiveVisual.h">
-      <Filter>Header Files\IVisual</Filter>
-    </ClInclude>
-    <ClInclude Include="BuzzerVisual.h">
-      <Filter>Header Files\IVisual</Filter>
-    </ClInclude>
-    <ClInclude Include="EventArgs.h">
-      <Filter>Header Files\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="EventFunctor.h">
-      <Filter>Header Files\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="SpecificEventFunctor.h">
-      <Filter>Header Files\Events</Filter>
-    </ClInclude>
     <ClInclude Include="KeyPadListener.h">
-      <Filter>Header Files\Keypad</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyDownEventArgs.h">
-      <Filter>Header Files\Keypad</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyPadLongPressListener.h">
       <Filter>Header Files\Keypad</Filter>
     </ClInclude>
     <ClInclude Include="IIDProvider.h">
@@ -122,9 +83,6 @@
     </ClInclude>
     <ClInclude Include="RTCDateTimeProvider.h">
       <Filter>Header Files\DateTime</Filter>
-    </ClInclude>
-    <ClInclude Include="Visual Micro\.acessouniversidadefederaldoabc.vsarduino.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MenuPanelView.h">
       <Filter>Header Files\Menu</Filter>
@@ -155,19 +113,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BuzzerVisual.cpp">
-      <Filter>Source Files\Visual</Filter>
-    </ClCompile>
-    <ClCompile Include="CompositiveVisual.cpp">
-      <Filter>Source Files\Visual</Filter>
-    </ClCompile>
-    <ClCompile Include="LedsVisual.cpp">
-      <Filter>Source Files\Visual</Filter>
-    </ClCompile>
     <ClCompile Include="KeyPadListener.cpp">
-      <Filter>Source Files\Keypad</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyPadLongPressListener.cpp">
       <Filter>Source Files\Keypad</Filter>
     </ClCompile>
     <ClCompile Include="MifareIDProvider.cpp">
