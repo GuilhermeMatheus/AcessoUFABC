@@ -2,16 +2,17 @@
 #define EEPROMACCESSREGWRITER_H
 
 #include "IAccessRegWriter.h"
+
 class EepromAccessRegWriter :
-	public IAccessRegWriter
-{
+	public IAccessRegWriter {
+
 private:
-	int findEmptySlot();
+	int						findEmptySlot();
 
 public:
 	EepromAccessRegWriter();
 
-	int Write(AccessReg value);
+	int						Write( AccessReg value );
 
 	~EepromAccessRegWriter();
 };

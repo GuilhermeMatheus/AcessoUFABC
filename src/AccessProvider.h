@@ -3,21 +3,18 @@
 
 #include <Arduino.h>
 
-class AccessProvider
-{
+class AccessProvider {
 
 protected:
-	String(*converter)(byte&);
+	String					( *converter )( byte& );
 
 public:
-	AccessProvider(String (*converter)(byte&))
-	{
+	AccessProvider ( String ( *converter )( byte& ) ) {
 		this->converter = converter;
 	}
 
-	virtual int AllowAccess(byte& code) = 0;
-
-	virtual ~AccessProvider() { };
+	virtual int				AllowAccess( byte& code ) = 0;
+	virtual					~AccessProvider() { };
 };
 
 #endif /* ACCESSPROVIDER_H */

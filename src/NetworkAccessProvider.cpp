@@ -11,7 +11,7 @@ void NetworkAccessProvider::begin()
 NetworkAccessProvider::NetworkAccessProvider(String(*converter)(byte&))
 	: AccessProvider(converter) { }
 
-int NetworkAccessProvider::AllowAccess( byte& code )
+int NetworkAccessProvider::AllowAccess( byte &code )
 {
 	EthernetClient client;
 	byte server[] = { 10, 0, 0, 1 };

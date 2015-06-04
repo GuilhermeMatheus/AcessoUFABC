@@ -3,14 +3,12 @@
 
 #include "Arduino.h"
 
-class IMifareIDProvider
-{
+class IMifareIDProvider {
 public:
-	virtual bool HasNext() = 0;
+	virtual bool			HasNext() = 0;
+	virtual byte			GetID() = 0;
 
-	virtual byte GetID() = 0;
-
-	virtual ~IMifareIDProvider() = 0;
+	virtual					~IMifareIDProvider() = 0;
 };
 
 #endif /* IMIFAREIDPROVIDER_H */

@@ -197,3 +197,6 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+src/Visual Micro/.src.vsarduino.h
+src/Visual Micro/Configuration.Debug.vmps.xml
+src/Visual Micro/Compile.vmps.xml
