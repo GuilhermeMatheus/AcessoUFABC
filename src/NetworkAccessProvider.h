@@ -16,7 +16,7 @@ public:
 	NetworkAccessProvider(String(*converter)(byte&));
 
 	static void				begin();
-	int						AllowAccess( byte &code );
+	AccessAttemptResult		AllowAccess( byte &code );
 
 	~NetworkAccessProvider();
 };

@@ -16,6 +16,7 @@
 #include "MenuPanelView.h"
 #include "EepromAccessRegWriter.h"
 #include "NetworkAccessProvider.h"
+#include "GuardianKeeper.h"
 
 namespace root {
 	KeyPadListener						*_keyPadListener;
@@ -27,6 +28,7 @@ namespace root {
 	RTCDateTimeProvider					*_rtcDateTimeProvider;
 	EepromAccessRegWriter				*_eepromAccessRegWriter;
 	MenuPanelView						*_menuConfiguration;
+	GuardianKeeper						*_guardianKeeper;
 
 	String _converter( byte &value ) {
 		return "dumb";
@@ -42,6 +44,26 @@ namespace root {
 		}
 	}
 
+	inline void checkMenuRequest() {
+		long menuButtonPressedTime = root::_keyPadListener->GetPressTime( '*', 3000 );
+
+		if (menuButtonPressedTime < 3000)
+			return;
+
+		_menuConfiguration->Active();
+		_idleView->ViewChanged();
+	}
+
+	inline void checkCardReader() {
+		byte target[4];
+
+		int isCardPresent = _mifareIdProvider->WaitForNextID( target[0], 2000 );
+		if (isCardPresent < 0)
+			return;
+
+		_guardianKeeper->AllowAccess( target[0] );
+		_idleView->ViewChanged();
+	}
 }
 
 void setup() {
@@ -73,15 +95,17 @@ void setup() {
 															root::_rtc, 
 															root::_mifareIdProvider, 
 															root::_eepromAccessRegWriter );
+
+	NetworkAccessProvider* nap =		new NetworkAccessProvider( root::_converter );
+	root::_guardianKeeper =				new GuardianKeeper( nap, root::_lcd );
 }
 
 void loop() {
-	root::debugLoop();
+	//root::debugLoop();
 
 	root::_menuConfiguration->Loop();
 	root::_idleView->Draw();
 
-	long menuButtonPressedTime = root::_keyPadListener->GetPressTime( '*', 3000 );
-	if ( menuButtonPressedTime >= 3000 )
-		 root::_menuConfiguration->Active();
+	root::checkMenuRequest();
+	root::checkCardReader();
 }

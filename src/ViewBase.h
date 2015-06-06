@@ -18,14 +18,12 @@ protected:
 public:
 	LiquidCrystal_I2C* lcd;
 
-	ViewBase(LiquidCrystal_I2C* lcd)
-	{
+	ViewBase(LiquidCrystal_I2C* lcd) {
 		this->lastDraw = -LONG_MAX;
 		this->lcd = lcd;
 	}
 
-	void Draw()
-	{
+	void Draw() {
 		if (!HasNewFrame() && LastView == this)
 			return;
 
@@ -35,8 +33,7 @@ public:
 		lastDraw = millis();
 	}
 
-	long GetElapsedTimeFromLastDraw()
-	{
+	long GetElapsedTimeFromLastDraw() {
 		return millis() - lastDraw;
 	}
 

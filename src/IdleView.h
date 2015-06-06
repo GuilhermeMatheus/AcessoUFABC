@@ -10,6 +10,7 @@ class IdleView :
 {
 private:
 	IDateTimeProvider* DateProvider;
+	bool viewChanged;
 
 protected:
 	void OnDraw();
@@ -18,6 +19,8 @@ protected:
 public:
 
 	IdleView(LiquidCrystal_I2C* lcd, IDateTimeProvider* DateProvider);
+
+	void ViewChanged();
 
 	~IdleView();
 };

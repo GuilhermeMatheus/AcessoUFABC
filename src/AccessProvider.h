@@ -3,18 +3,23 @@
 
 #include <Arduino.h>
 
+struct AccessAttemptResult {
+	bool							AccessAllowed;
+	char							Response[32];
+};
+
 class AccessProvider {
 
 protected:
-	String					( *converter )( byte& );
+	String							( *converter )( byte& );
 
 public:
 	AccessProvider ( String ( *converter )( byte& ) ) {
 		this->converter = converter;
 	}
 
-	virtual int				AllowAccess( byte& code ) = 0;
-	virtual					~AccessProvider() { };
+	virtual AccessAttemptResult		AllowAccess( byte& code ) = 0;
+	virtual							~AccessProvider() { };
 };
 
 #endif /* ACCESSPROVIDER_H */

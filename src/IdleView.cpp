@@ -18,8 +18,17 @@ void IdleView::OnDraw()
 	this->lcd->print(F("* por 3s p/ menu"));
 }
 
+void IdleView::ViewChanged() {
+	viewChanged = true;
+}
+
 bool IdleView::HasNewFrame()
 {
+	if (viewChanged) {
+		viewChanged = false;
+		return true;
+	}
+
 	return GetElapsedTimeFromLastDraw() >= 60000;
 }
 

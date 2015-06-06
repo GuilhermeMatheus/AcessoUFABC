@@ -82,6 +82,7 @@
     <ClInclude Include="AccessProvider.h" />
     <ClInclude Include="AccessReg.h" />
     <ClInclude Include="EepromAccessRegWriter.h" />
+    <ClInclude Include="GuardianKeeper.h" />
     <ClInclude Include="IDateTimeProvider.h" />
     <ClInclude Include="IdleView.h" />
     <ClInclude Include="IIDProvider.h" />
@@ -101,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EepromAccessRegWriter.cpp" />
+    <ClCompile Include="GuardianKeeper.cpp" />
     <ClCompile Include="IdleView.cpp" />
     <ClCompile Include="KeyPadListener.cpp" />
     <ClCompile Include="MenuPanelView.cpp" />

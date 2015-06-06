@@ -11,7 +11,7 @@ void NetworkAccessProvider::begin()
 NetworkAccessProvider::NetworkAccessProvider(String(*converter)(byte&))
 	: AccessProvider(converter) { }
 
-int NetworkAccessProvider::AllowAccess( byte &code )
+AccessAttemptResult NetworkAccessProvider::AllowAccess( byte &code )
 {
 	EthernetClient client;
 	byte server[] = { 10, 0, 0, 1 };
@@ -43,7 +43,10 @@ int NetworkAccessProvider::AllowAccess( byte &code )
 		_LOG("connection failed");
 	}
 
-	return 1;
+	return AccessAttemptResult { 
+		false,								//AccessAllowed
+		"1234567890123456789012345678901"	//Response
+	};
 }
 
 	

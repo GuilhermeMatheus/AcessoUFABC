@@ -111,6 +111,9 @@
     <ClInclude Include="Visual Micro\.src.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GuardianKeeper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyPadListener.cpp">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="NetworkAccessProvider.cpp">
       <Filter>Source Files\Access</Filter>
+    </ClCompile>
+    <ClCompile Include="GuardianKeeper.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
