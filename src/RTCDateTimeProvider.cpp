@@ -44,9 +44,5 @@ String RTCDateTimeProvider::ToString()
 
 	result.concat(now.year());
 
-//#ifdef DEBUG
-	Serial.println(result);
-//#endif
-
 	return result;
 }

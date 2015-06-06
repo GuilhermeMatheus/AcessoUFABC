@@ -37,9 +37,6 @@ int16_t KeyPadListener::GetState()
 	else if ((rowResult = GetRowFromColumn(pinColumnThree)) != -1)
 		c = keyTable[2][rowResult];
 
-	Serial.print("\nGetState = ");
-	Serial.print(c, DEC);
-
 	return c;
 }
 uint8_t KeyPadListener::WaitForDigitInput()

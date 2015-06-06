@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <RTClib.h>
 
+#include "utils.h"
+
 #define OFFSET_ACS_Password		 0
 #define OFFSET_NW_IsDHCP		 4
 #define OFFSET_NW_IpAddress		 5

@@ -19,8 +19,9 @@
 
 #define MIN_THRESHOLD_ROW_4 896 + THRESHOLD_TOLERANCE
 
+#include <Arduino.h>
+
 #include "System.h"
-#include "Arduino.h"
 
 class KeyPadListener
 {

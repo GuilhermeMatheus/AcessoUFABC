@@ -115,39 +115,34 @@ bool System::NW_setGateway(uint32_t value)
 #pragma region Server 
 bool System::SRV_loadIpAddressInto( byte target[4] )
 {
-	for ( int i = 0; i < 4; i++ )
-		target[i] = OFFSET_SRV_IpAddress + i;
-
+	//TODO: Salvar o ip com os octetos na ordem correta
+	for ( int i = 3; i >= 0; i-- )
+		target[3-i] = EEPROM.read( OFFSET_SRV_IpAddress + i );
+	
 	return true;
 }
-uint32_t  System::SRV_getIpAddress()
-{
+uint32_t  System::SRV_getIpAddress() {
 	return getUInt32Helper(OFFSET_SRV_IpAddress);
 }
-bool System::SRV_setIpAddress(uint32_t value)
-{
+bool System::SRV_setIpAddress(uint32_t value) {
 	return setUInt32Helper(value, OFFSET_SRV_IpAddress);
 }
 
-uint16_t System::SRV_getPort()
-{
+uint16_t System::SRV_getPort() {
 	uint16_t result = -1;
 	eeprom_read_block((void*)&result, (void*)OFFSET_SRV_Port, sizeof(uint16_t));
 
 	return result;
 }
-bool System::SRV_setPort(uint16_t value)
-{
+bool System::SRV_setPort(uint16_t value) {
 	eeprom_write_block((const void*)&value, (void*)OFFSET_SRV_Port, sizeof(uint16_t));
 	return true;
 }
 
-uint8_t System::SRV_getComputer()
-{
+uint8_t System::SRV_getComputer() {
 	return EEPROM.read(OFFSET_SRV_Computer);
 }
-bool System::SRV_setComputer(uint8_t value)
-{
+bool System::SRV_setComputer(uint8_t value) {
 	EEPROM.write(OFFSET_SRV_Computer, value);
 	return true;
 }
@@ -209,11 +204,6 @@ uint32_t System::getUInt32Helper(int8_t address)
 }
 bool System::setUInt32Helper(uint32_t value, int8_t address)
 {
-	Serial.print(F("\nEscrevendo em '"));
-	Serial.print(address, DEC);
-	Serial.print(F("' valor: "));
-	Serial.print(value, DEC);
-
 	eeprom_write_block((const void*)&value, (void*)address, sizeof(uint32_t));
 	return true;
 }

@@ -34,20 +34,10 @@ namespace root {
 		return "dumb";
 	}
 
-	void debugLoop() {
-		NetworkAccessProvider* net = new NetworkAccessProvider( _converter );
-		byte id[] = { 1, 2 };
-		while (true) {
-			net->AllowAccess( id[0] );
-			_LOG( "debugLoop" );
-			delay( 500 );
-		}
-	}
-
 	inline void checkMenuRequest() {
 		long menuButtonPressedTime = root::_keyPadListener->GetPressTime( '*', 3000 );
 
-		if (menuButtonPressedTime < 3000)
+		if (menuButtonPressedTime < 1000)
 			return;
 
 		_menuConfiguration->Active();
@@ -101,8 +91,6 @@ void setup() {
 }
 
 void loop() {
-	//root::debugLoop();
-
 	root::_menuConfiguration->Loop();
 	root::_idleView->Draw();
 
