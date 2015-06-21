@@ -5,29 +5,38 @@ void NetworkAccessProvider::begin()
 {
 	byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 	IPAddress ip(10, 0, 0, 2);
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+	pinMode(53, OUTPUT);
+	_LOG("AVR_ATmega");
+#endif
+
 	Ethernet.begin(mac, ip);
 }
 
-NetworkAccessProvider::NetworkAccessProvider(String(*converter)(byte&))
-	: AccessProvider(converter) { }
+NetworkAccessProvider::NetworkAccessProvider( String( *converter )( byte[] ), AccessProvider *connectionFallbackProvider )
+	: AccessProvider( converter ) {
+	this->connectionFallbackProvider = connectionFallbackProvider;
+}
 
 NetworkAccessProvider::~NetworkAccessProvider() { }
 
-AccessAttemptResult NetworkAccessProvider::AllowAccess( byte &code )
-{
-	String message = GetPostMessage(code);
-	
+AccessAttemptResult NetworkAccessProvider::AllowAccess( byte code[] ) {
+	String message = GetPostMessage( code );
 	String response = Post( message );
 
-	AccessAttemptResult result = ParseResponse( response );
-
-	return result;
+	bool connectionFailed = response == "";
+	
+	if ( connectionFailed )
+		return connectionFallbackProvider->AllowAccess( code );
+	else
+		return ParseResponse( response );
 }
 
-String NetworkAccessProvider::GetPostMessage( byte &code ) {
+String NetworkAccessProvider::GetPostMessage( byte code[] ) {
 	String postMessage = "";
-	postMessage += String(controllerPort, DEC) + ';';
-	postMessage += String(System::SRV_getComputer(), DEC) + ';';
+	postMessage += String( controllerPort, DEC ) + ';';
+	postMessage += String( System::SRV_getComputer(), DEC ) + ';';
 	postMessage += "0;1;";
 	postMessage += converter(code) + ';';
 	postMessage += "E;1;" + String((char)0x0D);
@@ -54,13 +63,13 @@ String NetworkAccessProvider::Post( String message ) {
 	}
 }
 
-AccessAttemptResult NetworkAccessProvider::ParseResponse(String message) {
+AccessAttemptResult NetworkAccessProvider::ParseResponse( String message ) {
 	const int	IDX_ACCESS_RESPONSE = 6;
 	const char	SEPARATOR = ';';
 
 	AccessAttemptResult result;
 
-	int idx_aux = 0, idx_split = 0;
+	int idx_split = 0;
 
 	for ( int i = 0; i < IDX_ACCESS_RESPONSE; i++ ) {
 		message = message.substring( idx_split );

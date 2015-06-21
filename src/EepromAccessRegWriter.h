@@ -1,6 +1,9 @@
 #ifndef EEPROMACCESSREGWRITER_H
 #define EEPROMACCESSREGWRITER_H
 
+#include <EEPROM.h>
+
+#include "System.h"
 #include "IAccessRegWriter.h"
 
 class EepromAccessRegWriter :

@@ -4,7 +4,7 @@
 #include "RTClib.h"
 
 typedef struct {
-	char							*text;
+	const char						*text;
 	void							( *ok_func )( MenuPanelView* );
 	void							( *back_func )( void );
 } MenuOption;

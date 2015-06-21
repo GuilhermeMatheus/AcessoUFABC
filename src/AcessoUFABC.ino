@@ -15,6 +15,7 @@
 #include "RTCDateTimeProvider.h"
 #include "MenuPanelView.h"
 #include "EepromAccessRegWriter.h"
+#include "EepromAccessProvider.h"
 #include "NetworkAccessProvider.h"
 #include "GuardianKeeper.h"
 
@@ -30,8 +31,20 @@ namespace root {
 	MenuPanelView						*_menuConfiguration;
 	GuardianKeeper						*_guardianKeeper;
 
-	String _converter( byte &value ) {
-		return "dumb";
+	String _converter( byte value[] ) {
+		String result = "000000";
+
+		unsigned long sufix = (unsigned int)value[0] + (unsigned int)(256 * value[1]);
+		unsigned long prefix = (unsigned long)(unsigned int)value[2] * (unsigned long)100000;
+		unsigned long sum = sufix + prefix;
+
+		unsigned long aux = 1000000000;
+		while ( sum < aux ) {
+			result += "0";
+			aux /= 10;
+		}
+
+		return result + String(sum, DEC);
 	}
 
 	inline void checkMenuRequest() {
@@ -51,28 +64,37 @@ namespace root {
 		if (isCardPresent < 0)
 			return;
 
-		_guardianKeeper->AllowAccess( target[0] );
+		_guardianKeeper->AllowAccess( target );
 		_idleView->ViewChanged();
 	}
 }
 
 void setup() {
 	Serial.begin(9600);
+	root::_lcd =						new LiquidCrystal_I2C ( 0x20,	//I2C address
+															    16,		//columns
+																2 );	//rows
+	root::_lcd->init();
+	root::_lcd->clear();
+	root::_lcd->noBacklight();
+	root::_lcd->println( F( "    UFABC" ) );
+	root::_lcd->setCursor( 0, 1 );
+	root::_lcd->println( F( "Starting..." ) );
+
 	Wire.begin();
 	SPI.begin();
-	System::begin();
-	NetworkAccessProvider::begin();
+
+	IAccessRegWriter *earw =			new EepromAccessRegWriter();
+	System::begin( earw );
 	
+	NetworkAccessProvider::begin();
+
 	root::_reader =						new MFRC522 ( 2,				//select pin
 													  9 );				//reset power down pin
 	root::_reader->PCD_Init();
 
 	root::_mifareIdProvider =			new MifareIDProvider( root::_reader );
 	root::_keyPadListener =				new KeyPadListener ( A0, A1, A2 );
-	root::_lcd =						new LiquidCrystal_I2C ( 0x20,	//I2C address
-															    16,		//columns
-																2 );	//rows
-	root::_lcd->init();
 
 	root::_rtc =						new RTC_DS1307 ();
 	root::_rtc->begin();
@@ -86,8 +108,11 @@ void setup() {
 															root::_mifareIdProvider, 
 															root::_eepromAccessRegWriter );
 
-	NetworkAccessProvider* nap =		new NetworkAccessProvider( root::_converter );
+	EepromAccessProvider *eap =			new EepromAccessProvider( root::_converter, root::_rtcDateTimeProvider );
+	NetworkAccessProvider *nap =		new NetworkAccessProvider( root::_converter, eap );
 	root::_guardianKeeper =				new GuardianKeeper( nap, root::_lcd );
+
+	root::_idleView->ViewChanged();
 }
 
 void loop() {

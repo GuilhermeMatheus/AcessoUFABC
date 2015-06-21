@@ -18,7 +18,7 @@ private:
 public:
 	GuardianKeeper ( AccessProvider *accessProvider, LiquidCrystal_I2C *lcd );
 	
-	int							AllowAccess(byte &cardId);
+	int							AllowAccess( byte cardId[] );
 
 	~GuardianKeeper();
 };

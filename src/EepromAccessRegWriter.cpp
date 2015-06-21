@@ -1,32 +1,26 @@
-#include "System.h"
 #include "EepromAccessRegWriter.h"
-#include <EEPROM.h>
 
+EepromAccessRegWriter::EepromAccessRegWriter() { }
 
-EepromAccessRegWriter::EepromAccessRegWriter()
-{
-}
-
-int EepromAccessRegWriter::Write(AccessReg value)
-{
-	int ee = findEmptySlot();
+int EepromAccessRegWriter::Write( AccessReg value ) {
+	int eaddr = findEmptySlot();
 	
-	if (ee < 0)
-		return ee;
+	if ( eaddr < 0 )
+		return eaddr;
 
-	const byte* p = (const byte*)(const void*)&value;
-	for (int i = 0; i < sizeof(value); i++)
-		EEPROM.write(ee++, *p++);
+	const byte* p = ( const byte* )( const void* )&value;
+	for ( size_t i = 0; i < sizeof( value ); i++ )
+		EEPROM.write( eaddr++, *p++ );
 
 	return 1;
 }
 
 int EepromAccessRegWriter::findEmptySlot()
 {
-	for (int i = OFFSET_ACS_Password; i < 1024; i += sizeof(AccessReg))
+	for (size_t i = OFFSET_ACS_Password; i < 1024; i += sizeof(AccessReg))
 	{
 		boolean found = true;
-		for (int j = i; j < i + sizeof(AccessReg); j++)
+		for (size_t j = i; j < i + sizeof(AccessReg); j++)
 			if (EEPROM.read(i) != 0xFF)
 			{
 				found = false;
@@ -40,6 +34,4 @@ int EepromAccessRegWriter::findEmptySlot()
 	return -1;
 }
 
-EepromAccessRegWriter::~EepromAccessRegWriter()
-{
-}
+EepromAccessRegWriter::~EepromAccessRegWriter() { }

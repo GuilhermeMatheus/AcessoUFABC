@@ -11,14 +11,14 @@ struct AccessAttemptResult {
 class AccessProvider {
 
 protected:
-	String							( *converter )( byte& );
+	String							( *converter )( byte[] );
 
 public:
-	AccessProvider ( String ( *converter )( byte& ) ) {
+	AccessProvider ( String ( *converter )( byte[] ) ) {
 		this->converter = converter;
 	}
 
-	virtual AccessAttemptResult		AllowAccess( byte& code ) = 0;
+	virtual AccessAttemptResult		AllowAccess( byte code[] ) = 0;
 	virtual							~AccessProvider() { };
 };
 

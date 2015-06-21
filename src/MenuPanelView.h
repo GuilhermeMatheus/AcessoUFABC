@@ -20,10 +20,10 @@
 class MenuPanelView :
 	public ViewBase {
 private:
-	const char				Up_Arrow    = ( char )  8;  // 0x0F10;
-	const char				Down_Arrow  = ( char )  9;  // 0x0C10;
-	const char				Left_Arrow  = ( char ) 18;  // 0x0E10;
-	const char				Right_Arrow = ( char ) 19;  // 0x0D10;
+	static const char				Up_Arrow    = ( char )  8;  // 0x0F10;
+	static const char				Down_Arrow  = ( char )  9;  // 0x0C10;
+	static const char				Left_Arrow  = ( char ) 18;  // 0x0E10;
+	static const char				Right_Arrow = ( char ) 19;  // 0x0D10;
 	
 	bool					hasNewFrame;
 

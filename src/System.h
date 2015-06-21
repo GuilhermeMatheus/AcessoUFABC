@@ -3,8 +3,17 @@
 
 #include <Arduino.h>
 #include <RTClib.h>
+#include <EEPROM.h>
 
 #include "utils.h"
+#include "AccessReg.h"
+#include "IAccessRegWriter.h"
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#define MAX_EEPROM_SIZE		  4096
+#else
+#define MAX_EEPROM_SIZE		  1024
+#endif
 
 #define OFFSET_ACS_Password		 0
 #define OFFSET_NW_IsDHCP		 4
@@ -24,11 +33,12 @@
 
 class System {
 private:
+	static IAccessRegWriter		*accessWriter;
 	System();
 	~System();
-public:
 
-	static void				begin();
+public:
+	static void					begin( IAccessRegWriter *accessWriter );
 
 
 /*
@@ -85,13 +95,15 @@ Access settings.
 */
 #pragma region Access
 	static bool				ACS_RevokeCard( uint32_t card );
-	static bool				ACS_AddCard( uint32_t card );
+	static bool				ACS_AddAccessReg( AccessReg &value );
 
 	static bool				ACS_RevokeMasterCard( uint32_t card );
 	static bool				ACS_AddMasterCard( uint32_t card );
 
 	static uint32_t			ACS_GetPassword();
 	static bool				ACS_SetPassword( uint32_t password );
+	
+	static AccessReg		ACS_GetAccessRegister( byte mifareID[4] );
 #pragma endregion
 
 

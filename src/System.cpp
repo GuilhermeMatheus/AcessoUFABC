@@ -1,10 +1,13 @@
 #include "System.h"
-#include <EEPROM.h>
 
-void System::begin() {
+IAccessRegWriter* System::accessWriter;
+
+void System::begin( IAccessRegWriter *accessWriter ) {
 	pinMode(LED_RED_PIN, OUTPUT);
 	pinMode(LED_GREEN_PIN, OUTPUT);
 	pinMode(BUZZER_PIN, OUTPUT);
+
+	System::accessWriter = accessWriter;
 }
 
 #pragma region Visual
@@ -45,31 +48,51 @@ void System::BEEP(unsigned long duration) {
 #pragma endregion
 
 #pragma region Access
-bool System::ACS_RevokeCard(uint32_t card)
-{
-	return false;
-}
-bool System::ACS_AddCard(uint32_t card)
-{
+
+bool System::ACS_RevokeCard( uint32_t card ) {
 	return false;
 }
 
-bool System::ACS_RevokeMasterCard(uint32_t card)
-{
+bool System::ACS_AddAccessReg( AccessReg &value ) {
+	System::accessWriter->Write( value );
+
+	return true;
+}
+
+//TODO: Usar um tipo virtual para Salvar os dados
+bool System::ACS_RevokeMasterCard( uint32_t card ) {
 	return false;
 }
-bool System::ACS_AddMasterCard(uint32_t card)
-{
+//TODO: Usar um tipo virtual para Salvar os dados
+bool System::ACS_AddMasterCard( uint32_t card ) {
 	return false;
 }
 
-uint32_t System::ACS_GetPassword()
-{
+uint32_t System::ACS_GetPassword() {
 	return getUInt32Helper(OFFSET_ACS_Password);
 }
-bool System::ACS_SetPassword(uint32_t password)
-{
+bool System::ACS_SetPassword( uint32_t password ) {
 	return setUInt32Helper(password, OFFSET_ACS_Password);
+}
+
+//TODO: Usar um tipo virtual para Buscar os dados
+AccessReg System::ACS_GetAccessRegister( byte mifareID[4] ) {
+	AccessReg result;
+	for (int i = 0; i < 4; i++) result.mifareID[i] = 0xFF;
+
+	byte current[4];
+
+	bool found;
+	for (int add = OFFSET_ACS_Regs; add < MAX_EEPROM_SIZE && !found; add += sizeof(AccessReg)) {
+		for (int i = 0; i < 4; i++) {
+			if (EEPROM.read(add + i) != mifareID[i])
+				break;
+
+			eeprom_read_block((void*)&result, (void*)add, sizeof(AccessReg));
+			found = true;
+		}
+	}
+	return result;
 }
 #pragma endregion
 
@@ -195,15 +218,25 @@ bool System::DT_setNTPIpAddress(uint32_t value)
 }
 #pragma endregion
 
-uint32_t System::getUInt32Helper(int8_t address)
+uint32_t System::getUInt32Helper( int8_t address )
 {
 	uint32_t result = -1;
-	eeprom_read_block((void*)&result, (void*)address, sizeof(uint32_t));
-
+	byte *ptrResult = (byte *)&result;
+	for (size_t i = 0; i < sizeof(result); ++i) {
+		*ptrResult = EEPROM.read(address);
+		++address;
+		++ptrResult;
+	}		
 	return result;
 }
+
 bool System::setUInt32Helper(uint32_t value, int8_t address)
 {
-	eeprom_write_block((const void*)&value, (void*)address, sizeof(uint32_t));
+	byte *ptrValue = (byte *)&value;
+	for (size_t i = 0; i < sizeof(value); ++i) {
+		EEPROM.write(address, *ptrValue);
+		++address;
+		++ptrValue;
+	}		
 	return true;
 }

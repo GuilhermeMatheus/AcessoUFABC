@@ -9,7 +9,7 @@ GuardianKeeper::~GuardianKeeper() {
 
 }
 
-int GuardianKeeper::AllowAccess( byte &cardId ) {
+int GuardianKeeper::AllowAccess( byte cardId[] ) {
 	AccessAttemptResult result = accessProvider->AllowAccess( cardId );
 
 	lcd->clear();

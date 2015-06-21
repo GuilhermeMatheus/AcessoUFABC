@@ -111,8 +111,11 @@
     <ClInclude Include="Visual Micro\.src.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EepromAccessProvider.h">
+      <Filter>Header Files\Access</Filter>
+    </ClInclude>
     <ClInclude Include="GuardianKeeper.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Access</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,8 +143,14 @@
     <ClCompile Include="NetworkAccessProvider.cpp">
       <Filter>Source Files\Access</Filter>
     </ClCompile>
+    <ClCompile Include="EepromAccessProvider.cpp">
+      <Filter>Source Files\Access</Filter>
+    </ClCompile>
     <ClCompile Include="GuardianKeeper.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Access</Filter>
+    </ClCompile>
+    <ClCompile Include="AccessRegUtils.cpp">
+      <Filter>Source Files\Access</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
