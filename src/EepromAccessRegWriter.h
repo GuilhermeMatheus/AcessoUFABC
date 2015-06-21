@@ -10,12 +10,13 @@ class EepromAccessRegWriter :
 	public IAccessRegWriter {
 
 private:
-	int						findEmptySlot();
+	int						findSlot( byte code[4] );
 
 public:
 	EepromAccessRegWriter();
 
 	int						Write( AccessReg value );
+	int						Delete( byte code[4] );
 
 	~EepromAccessRegWriter();
 };

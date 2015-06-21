@@ -11,6 +11,8 @@ public:
 	IAccessRegWriter() { }
 	
 	virtual int				Write( AccessReg value ) = 0;
+	virtual int				Delete( byte code[4] ) = 0;
+
 	virtual					~IAccessRegWriter()	{ }
 };
 

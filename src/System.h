@@ -94,7 +94,7 @@ Access settings.
 ===============================================================================
 */
 #pragma region Access
-	static bool				ACS_RevokeCard( uint32_t card );
+	static bool				ACS_RevokeCard( byte code[] );
 	static bool				ACS_AddAccessReg( AccessReg &value );
 
 	static bool				ACS_RevokeMasterCard( uint32_t card );

@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define PACK_REG_SIZE 9
+
 struct AccessReg {
 	byte						mifareID[4];
 	byte						isMaster			: 1;

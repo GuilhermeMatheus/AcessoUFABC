@@ -29,8 +29,35 @@ AccessAttemptResult NetworkAccessProvider::AllowAccess( byte code[] ) {
 	
 	if ( connectionFailed )
 		return connectionFallbackProvider->AllowAccess( code );
-	else
-		return ParseResponse( response );
+	else {
+		AccessAttemptResult result = ParseResponse( response );
+
+		SaveResponseInSystemCache( result, code );
+
+		return result;
+	}
+}
+
+void NetworkAccessProvider::SaveResponseInSystemCache( AccessAttemptResult &response, byte code[] ) {
+	if ( response.AccessAllowed ){
+		AccessReg reg;
+
+		reg.isMaster = false;
+		for ( int i = 0; i < 4; i++ )
+			reg.mifareID[i] = code[i];
+		
+		reg.allowedDaysOfWeek = 127;
+		reg.hourStart = 0;
+		reg.hourEnd = 24;
+		reg.untilDay = 31;
+		reg.untilMon = 15;
+		reg.untilYear = 8192;
+
+		System::ACS_AddAccessReg( reg );
+	}
+	else {
+		System::ACS_RevokeCard( code );
+	}
 }
 
 String NetworkAccessProvider::GetPostMessage( byte code[] ) {

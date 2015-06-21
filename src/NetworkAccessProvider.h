@@ -3,6 +3,7 @@
 
 #include <Ethernet.h>
 
+#include "AccessReg.h"
 #include "AccessProvider.h"
 #include "System.h"
 #include "utils.h"
@@ -17,6 +18,7 @@ private:
 	AccessAttemptResult				ParseResponse( String message );
 	String							GetPostMessage( byte code[] );
 	String							Post( String message );
+	void							SaveResponseInSystemCache( AccessAttemptResult &response, byte code[] );
 
 public:
 	NetworkAccessProvider( String ( *converter ) ( byte[] ), AccessProvider *connectionFallbackProvider );

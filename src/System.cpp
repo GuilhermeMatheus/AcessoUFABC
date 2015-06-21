@@ -49,13 +49,13 @@ void System::BEEP(unsigned long duration) {
 
 #pragma region Access
 
-bool System::ACS_RevokeCard( uint32_t card ) {
-	return false;
+bool System::ACS_RevokeCard( byte code[] ) {
+	System::accessWriter->Delete( code );
+	return true;
 }
 
 bool System::ACS_AddAccessReg( AccessReg &value ) {
 	System::accessWriter->Write( value );
-
 	return true;
 }
 
@@ -75,7 +75,7 @@ bool System::ACS_SetPassword( uint32_t password ) {
 	return setUInt32Helper(password, OFFSET_ACS_Password);
 }
 
-//TODO: Usar um tipo virtual para Buscar os dados
+//TODO: Mudar retorno para Int e usar ponteiro de accessReg como parâmetro
 AccessReg System::ACS_GetAccessRegister( byte mifareID[4] ) {
 	AccessReg result;
 	for (int i = 0; i < 4; i++) result.mifareID[i] = 0xFF;
