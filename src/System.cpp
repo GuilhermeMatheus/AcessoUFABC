@@ -10,6 +10,9 @@ void System::begin( IAccessRegWriter *accessWriter ) {
 	System::accessWriter = accessWriter;
 }
 
+#pragma warning( push )
+#pragma warning( disable : 4068) //warning C4068: unknown pragma
+
 #pragma region Visual
 void System::LED_ALL_OFF() {
 	System::LED_RED_OFF();
@@ -240,3 +243,5 @@ bool System::setUInt32Helper(uint32_t value, int8_t address)
 	}		
 	return true;
 }
+
+#pragma warning( pop ) 

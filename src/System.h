@@ -31,6 +31,9 @@
 #define LED_GREEN_PIN			 7
 #define BUZZER_PIN				 5
 
+#pragma warning( push )
+#pragma warning( disable : 4068) //warning C4068: unknown pragma
+
 class System {
 private:
 	static IAccessRegWriter		*accessWriter;
@@ -178,3 +181,5 @@ DateTime settings.
 };
 
 #endif /* SYSTEM_H */
+
+#pragma warning( pop ) 
