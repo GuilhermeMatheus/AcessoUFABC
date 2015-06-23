@@ -8,6 +8,9 @@
 #include "System.h"
 #include "utils.h"
 
+/**
+* Classe responsável por verificar e responder requisições de acesso de acordo com o servidor especificado nas configurações da controladora.
+*/
 class NetworkAccessProvider :
 	public AccessProvider {
 
@@ -21,8 +24,17 @@ private:
 	void							SaveResponseInSystemCache( AccessAttemptResult &response, byte code[] );
 
 public:
+	/**
+	* Cria uma instância de NetworkAccessProvider.
+	* 
+	* @param converter Método auxiliar para conversão do MifareID em uma String codificada.
+	* @param connectionFallbackProvider Se a conexão com o servidor falhar, a resposta de acesso será dada por {@code connectionFallbackProvider}.
+	*/
 	NetworkAccessProvider( String ( *converter ) ( byte[] ), AccessProvider *connectionFallbackProvider );
 
+	/**
+	* Inicializa os componentes de rede da controladora.
+	*/
 	static void						begin();
 	AccessAttemptResult				AllowAccess( byte code[] );
 

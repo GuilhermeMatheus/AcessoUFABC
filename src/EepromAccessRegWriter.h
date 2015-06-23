@@ -6,6 +6,9 @@
 #include "System.h"
 #include "IAccessRegWriter.h"
 
+/*
+* Classe responsável por gravar e deletar um registro com acesso permitido na memória EEPROM do microprocessador.
+*/
 class EepromAccessRegWriter :
 	public IAccessRegWriter {
 

@@ -9,6 +9,9 @@
 #include "AccessProvider.h"
 #include "IDateTimeProvider.h"
 
+/**
+* Classe responsável por verificar a EEPROM e responder requisições de acesso.
+*/
 class EepromAccessProvider :
 	public AccessProvider {
 
@@ -21,6 +24,12 @@ private:
 	void							StringCopySalutation( char *addr );
 
 public:
+	/**
+	* Cria uma instância de EepromAccessProvider.
+	* 
+	* @param converter Método auxiliar para conversão do MifareID em uma String codificada.
+	* @param dateTimeProvider Dado que {@code AccessReg} possui campos de validação de horário, {@code dateTimeProvider} é usado para se obter a data corrente;
+	*/
 	EepromAccessProvider( String ( *converter ) ( byte[] ), IDateTimeProvider *dateTimeProvider );
 
 	AccessAttemptResult				AllowAccess( byte code[] );
