@@ -153,4 +153,7 @@
       <Filter>Source Files\Access</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Fast Task List.txt" />
+  </ItemGroup>
 </Project>

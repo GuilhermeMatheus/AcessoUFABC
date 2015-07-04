@@ -1,0 +1,7 @@
+-Remover todos os warnings ( [-Wunknown-pragmas] )
+-Remover todos os char*;
+-Soldar mosfet;
+-Passar a usar senha no acesso às configurações;
+-Fazer uso do servidor NTP;
+-Criar classes auxiliares para salvar registros master ou não master;
+-Definir método de SETUP para quando o sistema for inicializado pela primeira vez;
