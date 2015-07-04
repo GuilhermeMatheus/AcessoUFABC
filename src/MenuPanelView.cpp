@@ -29,6 +29,7 @@ void								okMenuAcessoAdicionarCartao ( MenuPanelView* );
 void								okMenuAcessoRevogarCartao	( MenuPanelView* );
 void								okMenuAcessoAdicionarMestre	( MenuPanelView* );
 void								okMenuAcessoRevogarMestre	( MenuPanelView* );
+void								okMenuAcessoAlterarSenha	( MenuPanelView* );
 
 void								okMenuDataHoraAjustarData ( MenuPanelView* );
 void								okMenuDataHoraServidorNTP ( MenuPanelView* );
@@ -48,7 +49,8 @@ bool								editTemplateFlag	 ( const __FlashStringHelper*, String&, String&, bo
 uint16_t							editTemplateUInt16	 ( const __FlashStringHelper*, uint16_t, MenuPanelView *);
 uint32_t							editTemplateIP		 ( const __FlashStringHelper*, uint32_t, MenuPanelView *);
 DateTime							editTemplateDateTime ( const __FlashStringHelper*, DateTime, MenuPanelView *);
-uint32_t							editTemplateUInt32	 ( const __FlashStringHelper*, uint16_t, MenuPanelView *);
+uint32_t							editTemplateUInt32	 ( const __FlashStringHelper*, uint32_t, MenuPanelView *);
+uint32_t							editTemplatePassword ( const __FlashStringHelper*, MenuPanelView *);
 int									editTemplateMfrID	 ( byte&, MenuPanelView*);
 #pragma endregion
 
@@ -57,7 +59,8 @@ MenuOption innerMenuAcesso[] = {
 	{ "Adicionar Cartao",			okMenuAcessoAdicionarCartao,			gotoRootMenu },
 	{ "Revogar Cartao",				okMenuAcessoRevogarCartao,				gotoRootMenu },
 	{ "Adicionar Mestre",			okMenuAcessoAdicionarMestre,			gotoRootMenu },
-	{ "Revogar Mestre",				okMenuAcessoRevogarMestre,				gotoRootMenu }
+	{ "Revogar Mestre",				okMenuAcessoRevogarMestre,				gotoRootMenu },
+	{ "Alterar Senha",				okMenuAcessoAlterarSenha,				gotoRootMenu }
 };
 
 MenuOption innerMenuDataHora[] = {
@@ -93,7 +96,7 @@ MenuOption rootMenu[] = {
 
 #pragma region Goto
 void gotoAcesso( MenuPanelView *mpv ) {
-	setActivatedMenuOption( innerMenuAcesso, 4 );
+	setActivatedMenuOption( innerMenuAcesso, 5 );
 }
 void gotoDataHora( MenuPanelView *mpv ) {
 	setActivatedMenuOption( innerMenuDataHora, 3 );
@@ -185,6 +188,47 @@ void okMenuAcessoAdicionarMestre( MenuPanelView *mpv ) {
 void okMenuAcessoRevogarMestre( MenuPanelView *mpv ) {
 
 }
+void okMenuAcessoAlterarSenha( MenuPanelView *mpv ) {
+	bool isActualPasswordCorrect = mpv->CheckPassword();
+	mpv->lcd->clear();
+	
+	if ( !isActualPasswordCorrect ) {
+		mpv->lcd->print( F ( "   Senha atual" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F ( "    incorreta" ) );
+
+		System::NOTIFY_ERROR();
+		return;
+	}
+
+	uint32_t newPassword = editTemplatePassword( F( "Nova senha:" ), mpv );
+	if ( newPassword == INVALID_PASSWORD ) {
+		mpv->lcd->print( F ( " Senha invalida" ) );
+
+		System::NOTIFY_ERROR();
+		return;
+	}
+
+	mpv->lcd->clear();
+
+	uint32_t newPasswordAgain = editTemplatePassword( F( "Repita nva senha" ), mpv );
+	if ( newPassword != newPasswordAgain ) {
+		mpv->lcd->print( F( "     Senhas" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F( "   Diferentes" ) );
+
+		System::NOTIFY_ERROR();
+		return;
+	}
+	
+	System::ACS_SetPassword( newPassword );
+
+	mpv->lcd->println( F( " Senha alterada" ) );
+	mpv->lcd->setCursor( 0, 1 );
+	mpv->lcd->println( F( "  com sucesso" ) );
+}
+
+
 #pragma endregion
 
 #pragma region Date&Time Menu
@@ -502,7 +546,7 @@ int editTemplateMfrID( byte &value, MenuPanelView *mpv ) {
 	}
 }
 
-uint32_t editTemplateUInt32( const __FlashStringHelper * editorDisplay, uint16_t current, MenuPanelView *mpv ) {
+uint32_t editTemplateUInt32( const __FlashStringHelper * editorDisplay, uint32_t current, MenuPanelView *mpv ) {
 	mpv->lcd->clear();
 	mpv->lcd->print( editorDisplay );
 
@@ -540,6 +584,58 @@ uint32_t editTemplateUInt32( const __FlashStringHelper * editorDisplay, uint16_t
 
 		if ( result <= 2147483647 )
 			break;
+	}
+
+	return ( uint32_t )result;
+}
+
+uint32_t editTemplatePassword(const __FlashStringHelper * editorDisplay, MenuPanelView *mpv) {
+	mpv->lcd->clear();
+	mpv->lcd->print( editorDisplay );
+
+	uint64_t result;
+	bool faulted = false;
+	while ( true ) {
+		if ( faulted ) {
+			mpv->lcd->setCursor( 1, 1 );
+			mpv->lcd->print( F("Senha invalida") );
+			
+			System::NOTIFY_ERROR();
+
+			mpv->lcd->setCursor( 0, 1 );
+			mpv->lcd->print("   ");
+		}
+
+		mpv->lcd->setCursor( 3, 1 );
+
+		for (int i = 0; i < 10; i++)
+			mpv->lcd->print( '_' );
+
+		result = 0;
+
+		mpv->lcd->cursor_on();
+		for ( uint8_t i = 0; i < 10; i++ )
+		{
+			mpv->lcd->setCursor( 3+i, 1 );
+
+			char newValue;
+			do {
+				newValue = mpv->keyPadListener->WaitForInput();
+				if ( newValue == '#' ) {
+					mpv->lcd->cursor_off();
+					return INVALID_PASSWORD;
+				}
+			} while ( newValue < '0' || newValue > '9' );
+
+			result = ( result * 10 ) + newValue - '0';
+			mpv->lcd->print( '*' );
+		}
+		mpv->lcd->cursor_off();
+
+		if ( result <= 2147483647 && result != INVALID_PASSWORD)
+			break;
+		else
+			faulted = true;
 	}
 
 	return ( uint32_t )result;
@@ -607,9 +703,24 @@ bool MenuPanelView::TryToScroll( int8_t delta ) {
 	return true;
 }
 
+bool MenuPanelView::CheckPassword() {
+	uint32_t entryPassword = editTemplatePassword( F( "Senha de acesso:" ), this );
+	return entryPassword == System::ACS_GetPassword();
+}
+
 void MenuPanelView::Active() {
-	gotoRootMenu();
-	this->hasNewFrame = isInMenu = true;
+	bool hasMenuAccess = CheckPassword();
+
+	if ( hasMenuAccess ) {
+		gotoRootMenu();
+		this->hasNewFrame = isInMenu = true;
+	}
+	else {
+		lcd->clear();
+		lcd->print(F("Senha incorreta"));
+
+		System::NOTIFY_ERROR();
+	}
 }
 
 void MenuPanelView::OnDraw() {

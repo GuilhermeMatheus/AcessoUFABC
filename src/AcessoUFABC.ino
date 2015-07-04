@@ -70,7 +70,6 @@ namespace root {
 }
 
 void setup() {
-	Serial.begin(9600);
 	root::_lcd =						new LiquidCrystal_I2C ( 0x20,	//I2C address
 															    16,		//columns
 																2 );	//rows
@@ -80,6 +79,8 @@ void setup() {
 	root::_lcd->println( F( "    UFABC" ) );
 	root::_lcd->setCursor( 0, 1 );
 	root::_lcd->println( F( "Starting..." ) );
+	
+	Serial.begin(9600);
 
 	Wire.begin();
 	SPI.begin();
@@ -113,6 +114,7 @@ void setup() {
 	root::_guardianKeeper =				new GuardianKeeper( nap, root::_lcd );
 
 	root::_idleView->ViewChanged();
+
 }
 
 void loop() {

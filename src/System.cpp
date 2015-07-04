@@ -11,7 +11,7 @@ void System::begin( IAccessRegWriter *accessWriter ) {
 }
 
 #pragma warning( push )
-#pragma warning( disable : 4068) //warning C4068: unknown pragma
+#pragma warning( disable : 4068 ) //warning C4068: unknown pragma
 
 #pragma region Visual
 void System::LED_ALL_OFF() {
@@ -20,34 +20,48 @@ void System::LED_ALL_OFF() {
 }
 
 void System::LED_RED_ON() {
-	digitalWrite(LED_RED_PIN, HIGH);
+	digitalWrite( LED_RED_PIN, HIGH );
 }
 void System::LED_RED_OFF() {
-	digitalWrite(LED_RED_PIN, LOW);
+	digitalWrite( LED_RED_PIN, LOW );
 }
-void System::LED_RED_BLINK(unsigned long duration) {
+void System::LED_RED_BLINK( unsigned long duration ) {
 	LED_RED_ON();
-		delay(duration);
+		delay( duration );
 	LED_RED_OFF();
 }
 
 void System::LED_GREEN_ON() {
-	digitalWrite(LED_GREEN_PIN, HIGH);
+	digitalWrite( LED_GREEN_PIN, HIGH );
 }
 void System::LED_GREEN_OFF() {
-	digitalWrite(LED_GREEN_PIN, LOW);
+	digitalWrite( LED_GREEN_PIN, LOW );
 }
-void System::LED_GREEN_BLINK(unsigned long duration) {
+void System::LED_GREEN_BLINK( unsigned long duration ) {
 	LED_GREEN_ON();
 		delay(duration);
 	LED_GREEN_OFF();
 }
 
-void System::BEEP(unsigned long duration) {
+void System::BEEP( unsigned long duration ) {
 	digitalWrite(BUZZER_PIN, HIGH);
 		delay(duration);
 	digitalWrite(BUZZER_PIN, LOW);
 }
+
+void System::NOTIFY_ERROR( unsigned long duration ) {
+	System::LED_RED_ON();
+
+	for ( int i = 0; i < 3; i++ ) {
+		System::BEEP( 75 );
+		delay(100);
+	}
+
+	delay( 2000 );
+	System::LED_RED_OFF();
+
+}
+
 #pragma endregion
 
 #pragma region Access

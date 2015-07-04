@@ -22,15 +22,8 @@ int GuardianKeeper::AllowAccess( byte cardId[] ) {
 }
 
 inline int GuardianKeeper::RestrictAccess( AccessAttemptResult &result ) {
-	System::LED_RED_ON();
 	
-	for ( int i = 0; i < 3; i++ ) {
-		System::BEEP( 75 );
-		delay(100);
-	}
-
-	delay( 2000 );
-	System::LED_RED_OFF();
+	System::NOTIFY_ERROR();
 
 	return -1;
 }

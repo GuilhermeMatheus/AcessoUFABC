@@ -95,6 +95,19 @@ Visual commands.
 	* @param duration O tempo, em millisegundos, para pausar a aplicação.
 	*/
 	static void				BEEP( unsigned long duration = 100 );
+
+	/**
+	* Liga o led vermelho, faz 3 BEEPs e pausa a aplicação
+	*
+	* @param duration O tempo, em millisegundos, para pausar a aplicação.
+	*/
+	static void				NOTIFY_ERROR( unsigned long duration = 100 );
+
+/*
+
+*/
+
+
 #pragma endregion
 
 

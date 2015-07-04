@@ -1,13 +1,17 @@
 #ifndef MENUPANELVIEW_H
 #define MENUPANELVIEW_H
 
-#define OPTIONS_COUNT	 1
 #define KEY_UP			'2'
 #define KEY_DOWN		'8'
 #define KEY_LEFT		'4'
 #define KEY_RIGHT		'6'
 #define KEY_OK			'*'
 #define KEY_CANCEL		'#'
+
+/**
+* Em métodos que exigem a digitação de senha do usuário, esta macro representa uma senha inválida.
+*/
+#define INVALID_PASSWORD 0
 
 #include <Arduino.h>
 
@@ -67,6 +71,13 @@ public:
 	*/
 	void							Active();
 	
+	/**
+	* Aguarda o usuário digitar a senha de acesso e a compara com o valor retornado por System::ACS_GetPassword()
+	* 
+	* @return Retorna True quando a senha for correta ou, caso contrário, False.
+	*/
+	bool							CheckPassword();
+
 	~MenuPanelView();
 };
 
