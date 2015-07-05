@@ -1,3 +1,5 @@
+-Usar ícones no menu
+
 -Remover todos os warnings ( [-Wunknown-pragmas] )
 -Remover todos os char*;
 -Soldar mosfet;
@@ -5,3 +7,4 @@
 -Fazer uso do servidor NTP;
 -Criar classes auxiliares para salvar registros master ou não master;
 -Definir método de SETUP para quando o sistema for inicializado pela primeira vez;
+-No pack e unpack de RegisterReg, zerar bits não usados;

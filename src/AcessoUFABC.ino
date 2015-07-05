@@ -73,9 +73,9 @@ void setup() {
 	root::_lcd =						new LiquidCrystal_I2C ( 0x20,	//I2C address
 															    16,		//columns
 																2 );	//rows
-	root::_lcd->init();
-	root::_lcd->clear();
-	root::_lcd->noBacklight();
+
+	ViewBase::InitDisplay( root::_lcd );
+
 	root::_lcd->println( F( "    UFABC" ) );
 	root::_lcd->setCursor( 0, 1 );
 	root::_lcd->println( F( "Starting..." ) );

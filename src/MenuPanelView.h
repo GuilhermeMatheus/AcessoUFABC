@@ -11,7 +11,7 @@
 /**
 * Em métodos que exigem a digitação de senha do usuário, esta macro representa uma senha inválida.
 */
-#define INVALID_PASSWORD 0
+#define INVALID_PASSWORD	0
 
 #include <Arduino.h>
 
@@ -27,11 +27,6 @@
 class MenuPanelView :
 	public ViewBase {
 private:
-	static const char				Up_Arrow    = ( char )  8;  // 0x0F10;
-	static const char				Down_Arrow  = ( char )  9;  // 0x0C10;
-	static const char				Left_Arrow  = ( char ) 18;  // 0x0E10;
-	static const char				Right_Arrow = ( char ) 19;  // 0x0D10;
-	
 	bool							hasNewFrame;
 
 protected:

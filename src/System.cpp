@@ -249,6 +249,8 @@ uint32_t System::getUInt32Helper( int8_t address )
 
 bool System::setUInt32Helper(uint32_t value, int8_t address)
 {
+	_LOGN( value, DEC );
+
 	byte *ptrValue = (byte *)&value;
 	for (size_t i = 0; i < sizeof(value); ++i) {
 		EEPROM.write(address, *ptrValue);

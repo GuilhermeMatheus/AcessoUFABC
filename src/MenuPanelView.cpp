@@ -212,6 +212,8 @@ void okMenuAcessoAlterarSenha( MenuPanelView *mpv ) {
 	mpv->lcd->clear();
 
 	uint32_t newPasswordAgain = editTemplatePassword( F( "Repita nva senha" ), mpv );
+	mpv->lcd->clear();
+	
 	if ( newPassword != newPasswordAgain ) {
 		mpv->lcd->print( F( "     Senhas" ) );
 		mpv->lcd->setCursor( 0, 1 );
@@ -223,9 +225,10 @@ void okMenuAcessoAlterarSenha( MenuPanelView *mpv ) {
 	
 	System::ACS_SetPassword( newPassword );
 
-	mpv->lcd->println( F( " Senha alterada" ) );
+	mpv->lcd->print( F( " Senha alterada" ) );
 	mpv->lcd->setCursor( 0, 1 );
-	mpv->lcd->println( F( "  com sucesso" ) );
+	mpv->lcd->print( F( "  com sucesso" ) );
+	delay( 2000 );
 }
 
 
@@ -590,6 +593,7 @@ uint32_t editTemplateUInt32( const __FlashStringHelper * editorDisplay, uint32_t
 }
 
 uint32_t editTemplatePassword(const __FlashStringHelper * editorDisplay, MenuPanelView *mpv) {
+	
 	mpv->lcd->clear();
 	mpv->lcd->print( editorDisplay );
 
@@ -611,6 +615,7 @@ uint32_t editTemplatePassword(const __FlashStringHelper * editorDisplay, MenuPan
 		for (int i = 0; i < 10; i++)
 			mpv->lcd->print( '_' );
 
+		mpv->lcd->print("   ");
 		result = 0;
 
 		mpv->lcd->cursor_on();
@@ -731,16 +736,16 @@ void MenuPanelView::OnDraw() {
 
 	this->lcd->setCursor( 0, 1 );
 	this->lcd->print( F( "*Y#N 2" ) );
-	this->lcd->print( Up_Arrow );
+	this->lcd->write( byte( UP_ARROW_IDX ) );
 	
 	this->lcd->print( F( " 8") );
-	this->lcd->print( Down_Arrow );
+	this->lcd->write( byte( DOWN_ARROW_IDX ) );
 
 	this->lcd->print( F( " 6" ) );
-	this->lcd->print( Right_Arrow );
+	this->lcd->write( byte( RIGHT_ARROW_IDX ) );
 	
 	this->lcd->print( F( " 4" ) );
-	this->lcd->print( Left_Arrow );
+	this->lcd->write( byte( LEFT_ARROW_IDX ) );
 }
 
 bool MenuPanelView::HasNewFrame() {
