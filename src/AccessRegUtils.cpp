@@ -3,12 +3,19 @@
 void AccessRegUtils::AccessReg_pack( const AccessReg &reg, byte buffer[] ) {
 	for ( int i = 0; i < 4; i++ )
 		buffer[i] = reg.mifareID[i];
+	
+	byte allowedDaysOfWeek = reg.allowedDaysOfWeek & (byte)0x7F;
+	byte hourStart = reg.hourStart & (byte)0x1F;
+	byte hourEnd = reg.hourEnd & (byte)0x1F;
+	byte untilDay = reg.untilDay & (byte)0x1F;
+	byte untilMon = reg.untilMon & (byte)0x0F;
+	uint16_t untilYear = reg.untilYear & (uint16_t)0x1FFF;
 
-	buffer[4] = ( reg.isMaster	<< 7 ) | ( reg.allowedDaysOfWeek );
-	buffer[5] = ( reg.hourStart	<< 3 ) | ( reg.hourEnd	 >> 2 );
-	buffer[6] = ( reg.hourEnd	<< 6 ) | ( reg.untilDay  << 1 ) | ( reg.untilMon >> 3 );
-	buffer[7] = ( reg.untilMon	<< 5 ) | ( reg.untilYear >> 8 );
-	buffer[8] = ( reg.untilYear	 % 256 );
+	buffer[4] = (reg.isMaster << 7) | (allowedDaysOfWeek);
+	buffer[5] = (hourStart << 3) | (hourEnd >> 2);
+	buffer[6] = (hourEnd << 6) | (untilDay << 1) | (untilMon >> 3);
+	buffer[7] = (untilMon << 5) | (untilYear >> 8);
+	buffer[8] = (untilYear % 256);
 }
 
 void AccessRegUtils::AccessReg_unpack( const byte buffer[], AccessReg &reg ) {
