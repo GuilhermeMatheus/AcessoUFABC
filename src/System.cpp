@@ -215,6 +215,13 @@ bool System::ACT_setTime(uint16_t value)
 #pragma endregion
 
 #pragma region DateTime 
+bool System::SRV_loadNTPIpAddressInto( byte target[4] ) {
+	//TODO: Salvar o ip com os octetos na ordem correta
+	for ( int i = 3; i >= 0; i-- )
+		target[3-i] = EEPROM.read( OFFSET_DT_NTPIpAddress + i );
+	
+	return true;
+}
 DateTime System::DT_getDateTime(RTC_DS1307 * rtc)
 {
 	return rtc->now();

@@ -99,6 +99,7 @@
     <ClInclude Include="MenuPanelView.h" />
     <ClInclude Include="MifareIDProvider.h" />
     <ClInclude Include="NetworkAccessProvider.h" />
+    <ClInclude Include="NTPDateTimeProvider.h" />
     <ClInclude Include="RTCDateTimeProvider.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="utils.h" />
@@ -115,6 +116,7 @@
     <ClCompile Include="MenuPanelView.cpp" />
     <ClCompile Include="MifareIDProvider.cpp" />
     <ClCompile Include="NetworkAccessProvider.cpp" />
+    <ClCompile Include="NTPDateTimeProvider.cpp" />
     <ClCompile Include="RTCDateTimeProvider.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>

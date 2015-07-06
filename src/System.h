@@ -339,6 +339,14 @@ DateTime settings.
 */
 #pragma region DateTime 
 	/**
+	* Busca o endereço IP do servidor NTP e o clona no {@code target} dado por parâmetro.
+	* 
+	* @param target O endereço a ser usado para clonar o endereço IP do servidor de acesso.
+	* @return True quando a operação for realizada com sucesso ou, caso contrário, False.
+	*/
+	static bool				SRV_loadNTPIpAddressInto( byte target[4] );
+
+	/**
 	* Acessa a data usada pelo {@code rtc}.
 	* 
 	* @param rtc Módulo a ser verificado

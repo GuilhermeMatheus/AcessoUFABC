@@ -117,6 +117,9 @@
     <ClInclude Include="GuardianKeeper.h">
       <Filter>Header Files\Access</Filter>
     </ClInclude>
+    <ClInclude Include="NTPDateTimeProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyPadListener.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="AccessRegUtils.cpp">
       <Filter>Source Files\Access</Filter>
+    </ClCompile>
+    <ClCompile Include="NTPDateTimeProvider.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
