@@ -232,6 +232,17 @@ bool System::DT_setDateTime(DateTime value, RTC_DS1307 * rtc)
 	return true;
 }
 
+bool System::DT_getUseNTP()
+{
+	return EEPROM.read(OFFSET_DT_UseNTP) == 1;
+}
+bool System::DT_setUseNTP(bool value)
+{
+	EEPROM.write(OFFSET_DT_UseNTP, value ? 1 : 0 );
+	return true;
+}
+
+
 uint32_t System::DT_getNTPIpAddress()
 {
 	return getUInt32Helper(OFFSET_DT_NTPIpAddress);

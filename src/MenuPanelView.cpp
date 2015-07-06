@@ -33,6 +33,7 @@ void								okMenuAcessoAlterarSenha	( MenuPanelView* );
 
 void								okMenuDataHoraAjustarData ( MenuPanelView* );
 void								okMenuDataHoraServidorNTP ( MenuPanelView* );
+void								okMenuDataHoraUsarNTP ( MenuPanelView* );
 
 void								okMenuRedeDHCP		 ( MenuPanelView* );
 void								okMenuRedeEnderecoIP ( MenuPanelView* );
@@ -65,6 +66,7 @@ MenuOption innerMenuAcesso[] = {
 
 MenuOption innerMenuDataHora[] = {
 	{ "Ajustar Data",				okMenuDataHoraAjustarData,				gotoRootMenu }, 
+	{ "Usar NTP",					okMenuDataHoraUsarNTP,					gotoRootMenu },
 	{ "Servidor NTP",				okMenuDataHoraServidorNTP,				gotoRootMenu }  
 };														  
 														  
@@ -230,22 +232,70 @@ void okMenuAcessoAlterarSenha( MenuPanelView *mpv ) {
 	mpv->lcd->print( F( "  com sucesso" ) );
 	delay( 2000 );
 }
-
-
 #pragma endregion
 
 #pragma region Date&Time Menu
 void okMenuDataHoraAjustarData( MenuPanelView *mpv ) {
+	if ( System::DT_getUseNTP() ) {
+
+		mpv->lcd->clear();
+
+		mpv->lcd->print( F( " Desabilite NTP" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F( "p mudanca manual" ) );
+
+		System::NOTIFY_ERROR();
+
+		return;
+	}
+
 	DateTime dateTime = System::DT_getDateTime( mpv->rtc );
 	DateTime newdateTime = editTemplateDateTime( F( "Data e hora:" ), dateTime, mpv );
 	
 	System::DT_setDateTime( newdateTime, mpv->rtc );
 }
 void okMenuDataHoraServidorNTP( MenuPanelView *mpv ) {
+	if ( !System::DT_getUseNTP() ) {
+		mpv->lcd->clear();
+
+		mpv->lcd->print( F( " Habilite NTP p/" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F( " alterar ip NTP" ) );
+
+		System::NOTIFY_ERROR();
+
+		return;
+	}
+	
 	uint32_t ip = System::DT_getNTPIpAddress();
 	uint32_t newIp = editTemplateIP( F( "IP Servidor NTP:" ), ip, mpv );
-	
+
 	System::DT_setNTPIpAddress( newIp );
+	
+	mpv->lcd->clear();
+	mpv->lcd->print( F( " Conectando..." ) );
+
+	DateTime result;
+	bool success = mpv->ntpDateTimeProvider->TryGetDateTime( result, false );
+
+	if (success)
+		System::DT_setDateTime( result, mpv->rtc );
+	else {
+		mpv->lcd->home();
+		mpv->lcd->print( F( "Falha em conexao" ) );
+		
+		System::NOTIFY_ERROR();
+	}
+}
+
+void okMenuDataHoraUsarNTP( MenuPanelView *mpv ) {
+	bool ntpFlag = System::DT_getUseNTP();
+	String sSim = "Sim";
+	String sNao = "Nao";
+
+	bool newDhcpFlag = editTemplateFlag( F( "Usar NTP:" ), sSim, sNao, ntpFlag, mpv );
+
+	System::DT_setUseNTP( newDhcpFlag );
 }
 #pragma endregion
 
@@ -255,7 +305,7 @@ void okMenuRedeDHCP( MenuPanelView *mpv ) {
 	String sSim = "Sim";
 	String sNao = "Nao";
 
-	bool newDhcpFlag = editTemplateFlag( F( "DHCP:" ), sSim, sNao, dhcpFlag, mpv );
+	bool newDhcpFlag = editTemplateFlag( F( "Usar DHCP:" ), sSim, sNao, dhcpFlag, mpv );
 
 	System::NW_setIsDHCP(newDhcpFlag);
 }
@@ -652,13 +702,15 @@ MenuPanelView::MenuPanelView( LiquidCrystal_I2C* lcd,
 							  KeyPadListener* keyPad,
 							  RTC_DS1307* rtc,
 							  IIDProvider* idProvider,
-							  IAccessRegWriter* accessRegWriter )
+							  IAccessRegWriter* accessRegWriter,
+							  NTPDateTimeProvider* ntpDateTimeProvider )
 	: ViewBase( lcd ) {
 	this->hasNewFrame = isInMenu = false;
 	this->keyPadListener = keyPad;
 	this->rtc = rtc;
 	this->idProvider = idProvider;
 	this->accessRegWriter = accessRegWriter;
+	this->ntpDateTimeProvider = ntpDateTimeProvider;
 }
 
 void MenuPanelView::Loop() {

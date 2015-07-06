@@ -11,10 +11,15 @@
 class NTPDateTimeProvider :
 	public IDateTimeProvider
 {
+private:
+	uint8_t					backoffExponent;
+	long					lastCheckBackoff;
+	bool					CheckBackoff();
+	bool					CheckConstraints();
 public:
 	NTPDateTimeProvider();
 
-	bool					TryGetDateTime( DateTime &target );
+	bool					TryGetDateTime( DateTime &target, bool checkConstraints = true );
 	DateTime				GetDateTime();
 	String					ToString();
 

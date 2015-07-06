@@ -25,8 +25,10 @@
 #define OFFSET_ACT_Type			23
 #define OFFSET_ACT_Time			24
 #define OFFSET_DT_NTPIpAddress	26
-#define OFFSET_SRV_Computer		30
-#define OFFSET_ACS_Regs			31
+#define OFFSET_DT_UseNTP		30
+#define OFFSET_SRV_Computer		31
+#define OFFSET_ACS_Regs			32
+
 #define LED_RED_PIN				 8
 #define LED_GREEN_PIN			 7
 #define BUZZER_PIN				 5
@@ -362,6 +364,20 @@ DateTime settings.
 	*/
 	static bool				DT_setDateTime( DateTime value, RTC_DS1307 *rtc );
 
+	/**
+	* Acessa o flag de uso se servidor NTP nas configurações da controladora.
+	* 
+	* @return True quando o NTP for usado ou, caso contrário, False.
+	*/
+	static bool				DT_getUseNTP();
+	/**
+	* Sobrescreve o flag para atualizar a hora por servidor NTP na configuração da controladora.
+	* 
+	* @param value O novo flag a ser salvo na controladora.
+	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
+	*/
+	static bool				DT_setUseNTP( bool value );
+	
 	/**
 	* Acessa o endereço IP do servidor NTP usado pela controladora.
 	* 

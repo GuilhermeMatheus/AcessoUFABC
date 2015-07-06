@@ -3,15 +3,52 @@
 #include "System.h"
 #include "NTPDateTimeProvider.h"
 
-NTPDateTimeProvider::NTPDateTimeProvider() { }
+NTPDateTimeProvider::NTPDateTimeProvider() {
+	lastCheckBackoff = 0;
+	backoffExponent = 0;
+}
+
 NTPDateTimeProvider::~NTPDateTimeProvider() { }
 
-bool NTPDateTimeProvider::TryGetDateTime( DateTime &target ){
+bool NTPDateTimeProvider::TryGetDateTime( DateTime &target, bool checkConstraints ) {
+	if ( lastCheckBackoff == 0 )
+		lastCheckBackoff = millis();
+
+	if ( checkConstraints && !CheckConstraints() )
+		return false;
+
 	target = GetDateTime();
-	return target.year() > 1970;
+	bool result = target.year() > 2000;
+
+	if ( result ) {
+		backoffExponent = 27; //2^27 = 134217728 millis = 1,5 days
+		lastCheckBackoff = millis();
+	}
+	else if ( checkConstraints && backoffExponent < 6 )
+		backoffExponent = backoffExponent + 1;
+
+	return result;
+}
+
+bool NTPDateTimeProvider::CheckConstraints() {
+	if ( !CheckBackoff() )
+		return false;
+
+	if ( !System::DT_getUseNTP() )
+		return false;
+	
+	return true;
+}
+
+bool NTPDateTimeProvider::CheckBackoff() {
+	long now = millis();
+	long threshold = lastCheckBackoff + ( 60000 * ( 1 << backoffExponent ) );
+
+	return now > threshold;
 }
 
 DateTime NTPDateTimeProvider::GetDateTime() {
+
 	EthernetClient client;
 	byte server[4];
 	System::SRV_loadNTPIpAddressInto( server );
@@ -81,5 +118,12 @@ DateTime NTPDateTimeProvider::GetDateTime() {
 	client.flush();
 	client.stop();
 
-	return DateTime( time );
+	if ( time > 0 )
+		return DateTime( time );
+
+	return DateTime( SECONDS_FROM_1970_TO_2000 );
+}
+
+String NTPDateTimeProvider::ToString() {
+	return "na";
 }

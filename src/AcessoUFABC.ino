@@ -13,6 +13,7 @@
 #include "LiquidCrystal_I2C.h"
 #include "IdleView.h"
 #include "RTCDateTimeProvider.h"
+#include "NTPDateTimeProvider.h"
 #include "MenuPanelView.h"
 #include "EepromAccessRegWriter.h"
 #include "EepromAccessProvider.h"
@@ -27,6 +28,7 @@ namespace root {
 	IdleView							*_idleView;
 	RTC_DS1307							*_rtc;
 	RTCDateTimeProvider					*_rtcDateTimeProvider;
+	NTPDateTimeProvider					*_ntpDateTimeProvider;
 	EepromAccessRegWriter				*_eepromAccessRegWriter;
 	MenuPanelView						*_menuConfiguration;
 	GuardianKeeper						*_guardianKeeper;
@@ -67,6 +69,15 @@ namespace root {
 		_guardianKeeper->AllowAccess( target );
 		_idleView->ViewChanged();
 	}
+
+	void checkNtpServer( bool checkConstraints = true ) {
+		DateTime now;
+
+		if ( _ntpDateTimeProvider->TryGetDateTime( now, checkConstraints ) ) {
+			System::DT_setDateTime( now, _rtc );
+			_idleView->ViewChanged();
+		}
+	}
 }
 
 void setup() {
@@ -100,21 +111,26 @@ void setup() {
 	root::_rtc =						new RTC_DS1307 ();
 	root::_rtc->begin();
 
+	root::_ntpDateTimeProvider =		new NTPDateTimeProvider();
 	root::_rtcDateTimeProvider =		new RTCDateTimeProvider ( root::_rtc );
 	root::_idleView =					new IdleView ( root::_lcd, root::_rtcDateTimeProvider );
 	root::_eepromAccessRegWriter =		new EepromAccessRegWriter ();
+
+
 	root::_menuConfiguration =			new MenuPanelView ( root::_lcd, 
 															root::_keyPadListener, 
 															root::_rtc, 
 															root::_mifareIdProvider, 
-															root::_eepromAccessRegWriter );
+															root::_eepromAccessRegWriter,
+															root::_ntpDateTimeProvider );
 
 	EepromAccessProvider *eap =			new EepromAccessProvider( root::_converter, root::_rtcDateTimeProvider );
 	NetworkAccessProvider *nap =		new NetworkAccessProvider( root::_converter, eap );
 	root::_guardianKeeper =				new GuardianKeeper( nap, root::_lcd );
 
-	root::_idleView->ViewChanged();
+	root::checkNtpServer( false );
 
+	root::_idleView->ViewChanged();
 }
 
 void loop() {
@@ -123,4 +139,5 @@ void loop() {
 
 	root::checkMenuRequest();
 	root::checkCardReader();
+	root::checkNtpServer();
 }

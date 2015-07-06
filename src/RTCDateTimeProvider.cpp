@@ -1,21 +1,16 @@
 #include "RTCDateTimeProvider.h"
 
-RTCDateTimeProvider::RTCDateTimeProvider(RTC_DS1307* rtc)
-{
+RTCDateTimeProvider::RTCDateTimeProvider( RTC_DS1307 *rtc ) {
 	this->rtc = rtc;
 }
 
-RTCDateTimeProvider::~RTCDateTimeProvider()
-{
-}
+RTCDateTimeProvider::~RTCDateTimeProvider() { }
 
-DateTime RTCDateTimeProvider::GetDateTime()
-{
+DateTime RTCDateTimeProvider::GetDateTime() {
 	return rtc->now();
 }
 
-String RTCDateTimeProvider::ToString()
-{
+String RTCDateTimeProvider::ToString() {
 	const char _barra = '/';
 	const char _zero = '0';
 

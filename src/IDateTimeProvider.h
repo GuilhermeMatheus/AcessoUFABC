@@ -5,6 +5,8 @@
 
 #include "RTClib.h"
 
+#define SECONDS_FROM_1970_TO_2000 946684800
+
 /**
 * Classe responsável por fornecer a data corrente.
 */
