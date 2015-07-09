@@ -13,14 +13,15 @@ class EepromAccessRegWriter :
 	public IAccessRegWriter {
 
 private:
-	int						findSlot( byte code[4] );
+	int						findSlot( const byte code[4] );
 
 public:
 	EepromAccessRegWriter();
 
-	int						Write( AccessReg value );
-	int						Delete( byte code[4] );
-
+	int						Write( const AccessReg value );
+	int						Delete( const byte code[4] );
+	int						Get( const byte code[4], AccessReg &target );
+	
 	~EepromAccessRegWriter();
 };
 

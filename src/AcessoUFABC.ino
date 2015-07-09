@@ -49,7 +49,7 @@ namespace root {
 		return result + String(sum, DEC);
 	}
 
-	inline void checkMenuRequest() {
+	void checkMenuRequest() {
 		long menuButtonPressedTime = root::_keyPadListener->GetPressTime( '*', 3000 );
 
 		if (menuButtonPressedTime < 1000)
@@ -59,14 +59,14 @@ namespace root {
 		_idleView->ViewChanged();
 	}
 
-	inline void checkCardReader() {
-		byte target[4];
+	void checkCardReader() {
+		byte id[4];
 
-		int isCardPresent = _mifareIdProvider->WaitForNextID( target[0], 2000 );
+		int isCardPresent = _mifareIdProvider->WaitForNextID( id[0], 2000 );
 		if (isCardPresent < 0)
 			return;
 
-		_guardianKeeper->AllowAccess( target );
+		_guardianKeeper->AllowAccess( id );
 		_idleView->ViewChanged();
 	}
 
@@ -87,9 +87,9 @@ void setup() {
 
 	ViewBase::InitDisplay( root::_lcd );
 
-	root::_lcd->println( F( "    UFABC" ) );
+	root::_lcd->print( F( "    UFABC" ) );
 	root::_lcd->setCursor( 0, 1 );
-	root::_lcd->println( F( "Starting..." ) );
+	root::_lcd->print( F( "Starting..." ) );
 	
 	Serial.begin(9600);
 
@@ -140,4 +140,6 @@ void loop() {
 	root::checkMenuRequest();
 	root::checkCardReader();
 	root::checkNtpServer();
+
+	_LOG("end loop");
 }

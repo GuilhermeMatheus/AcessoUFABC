@@ -14,7 +14,7 @@ struct AccessAttemptResult {
 	/**
 	* O texto de resposta para a requisição de acesso.
 	*/
-	char							Response[32];
+	String							Response;
 };
 
 /**

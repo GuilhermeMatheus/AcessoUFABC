@@ -21,7 +21,7 @@ private:
 	AccessAttemptResult				RegisterNotFound( byte code[] );
 	AccessAttemptResult				CheckConstraints( AccessReg &reg );
 	bool							CheckPeriodConstraints( AccessReg &reg );
-	void							StringCopySalutation( char *addr );
+	void							SetStringSalutation( String &str );
 
 public:
 	/**

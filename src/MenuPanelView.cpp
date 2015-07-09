@@ -28,7 +28,6 @@ void								gotoAcionamento ( MenuPanelView* );
 void								okMenuAcessoAdicionarCartao ( MenuPanelView* );
 void								okMenuAcessoRevogarCartao	( MenuPanelView* );
 void								okMenuAcessoAdicionarMestre	( MenuPanelView* );
-void								okMenuAcessoRevogarMestre	( MenuPanelView* );
 void								okMenuAcessoAlterarSenha	( MenuPanelView* );
 
 void								okMenuDataHoraAjustarData ( MenuPanelView* );
@@ -60,7 +59,6 @@ MenuOption innerMenuAcesso[] = {
 	{ "Adicionar Cartao",			okMenuAcessoAdicionarCartao,			gotoRootMenu },
 	{ "Revogar Cartao",				okMenuAcessoRevogarCartao,				gotoRootMenu },
 	{ "Adicionar Mestre",			okMenuAcessoAdicionarMestre,			gotoRootMenu },
-	{ "Revogar Mestre",				okMenuAcessoRevogarMestre,				gotoRootMenu },
 	{ "Alterar Senha",				okMenuAcessoAlterarSenha,				gotoRootMenu }
 };
 
@@ -98,7 +96,7 @@ MenuOption rootMenu[] = {
 
 #pragma region Goto
 void gotoAcesso( MenuPanelView *mpv ) {
-	setActivatedMenuOption( innerMenuAcesso, 5 );
+	setActivatedMenuOption( innerMenuAcesso, 4 );
 }
 void gotoDataHora( MenuPanelView *mpv ) {
 	setActivatedMenuOption( innerMenuDataHora, 3 );
@@ -138,15 +136,28 @@ void okMenuAcessoAdicionarCartao( MenuPanelView *mpv ) {
 			result.mifareID[i] = id[i];
 
 		result.isMaster = false;
-		
-		mpv->accessRegWriter->Write( result );
+		result.allowedDaysOfWeek = B1111111;
+		result.hourEnd = 23;
+		result.hourStart = 0;
+		result.untilDay = 31;
+		result.untilMon = 12;
+		result.untilYear = 2200;
 
-		System::LED_GREEN_ON();
-		mpv->lcd->print( F( "Acesso permitido" ) );
-		mpv->lcd->setCursor( 0, 1 );
-		
-		for ( int i = 0; i < 4; i++ )
-			mpv->lcd->print( id[i], HEX );
+		bool saved = System::ACS_AddAccessReg( result ) > 0;
+
+		if ( saved ){
+			System::LED_GREEN_ON();
+			mpv->lcd->print(F("Acesso permitido"));
+		}
+		else {
+			System::LED_RED_ON();
+			mpv->lcd->print(F("  Sem memoria"));
+		}
+
+		mpv->lcd->setCursor(0, 1);
+
+		for (int i = 0; i < 4; i++)
+			mpv->lcd->print(id[i], HEX);
 	}
 	else {
 		System::LED_RED_ON();
@@ -157,7 +168,25 @@ void okMenuAcessoAdicionarCartao( MenuPanelView *mpv ) {
 	System::LED_ALL_OFF();
 }
 void okMenuAcessoRevogarCartao( MenuPanelView *mpv ) {
+	byte id[4];
+	int isCardRead = editTemplateMfrID( *id, mpv );
 
+	bool accessRevoked = System::ACS_RevokeCard( id );
+	mpv->lcd->clear();
+
+	if ( isCardRead < 0 )
+		return;
+
+	if ( accessRevoked ) {
+		mpv->lcd->print( F( "Cartao revogado" ) );
+		delay( 2000 );
+	}
+	else {
+		mpv->lcd->print( F( "   Cartao nao" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F( "   encontrado" ) );
+		System::NOTIFY_ERROR();
+	}
 }
 void okMenuAcessoAdicionarMestre( MenuPanelView *mpv ) {
 	byte id[4];
@@ -165,30 +194,35 @@ void okMenuAcessoAdicionarMestre( MenuPanelView *mpv ) {
 	int isCardRead = editTemplateMfrID( *id, mpv );
 	mpv->lcd->clear();
 
-	if (isCardRead > 0) {
-		AccessReg result;
+	
+	if ( isCardRead < 0 ) {
+		mpv->lcd->print( F( "Nenhum cartao lido" ) );
+		delay( 2000 );
+	}
 
-		for (int i = 0; i < 4; i++)
-			result.mifareID[i] = id[i];
+	AccessReg result;
+	bool regExists = System::ACS_GetAccessRegister( id, result ) > 0;
 
-		result.isMaster = true;
-		
-		mpv->accessRegWriter->Write( result );
-
-		mpv->lcd->print( F( "Acesso permitido" ) );
+	if ( regExists ){
+		mpv->lcd->print( F( "   Cartao ja" ) );
 		mpv->lcd->setCursor( 0, 1 );
-		
-		for ( int i = 0; i < 4; i++ )
-			mpv->lcd->print( id[i], HEX );
+		mpv->lcd->print( F( "   cadastrado" ) );
+
+		delay( 2000 );
+	}
+	else if ( System::ACS_AddMasterCard( id ) ) {
+		mpv->lcd->print( F( "     Mestre" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F( "   adicionado" ) );
 	}
 	else {
-		mpv->lcd->println( F( "Nenhum cartao lido" ) );
+		mpv->lcd->print( F( "     Espaco" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F( "  insuficiente" ) );
 	}
+	
 
 	delay( 2000 );
-}
-void okMenuAcessoRevogarMestre( MenuPanelView *mpv ) {
-
 }
 void okMenuAcessoAlterarSenha( MenuPanelView *mpv ) {
 	bool isActualPasswordCorrect = mpv->CheckPassword();
@@ -369,7 +403,7 @@ boolean editTemplateFlag( const __FlashStringHelper * editorDisplay,
 						  boolean current,
 						  MenuPanelView *mpv ) {
 	const __FlashStringHelper * bktsUnchecked = F( "[ ]" );
-	const __FlashStringHelper * bktsChecked = F(" [*]" );
+	const __FlashStringHelper * bktsChecked = F( "[*]" );
 
 	mpv->lcd->clear();
 	mpv->lcd->print(editorDisplay);

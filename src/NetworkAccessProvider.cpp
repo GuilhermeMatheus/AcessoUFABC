@@ -27,9 +27,12 @@ AccessAttemptResult NetworkAccessProvider::AllowAccess( byte code[] ) {
 
 	bool connectionFailed = response == "";
 	
-	if ( connectionFailed )
+	if ( connectionFailed ) {
+		_LOG("connectionFailed");
 		return connectionFallbackProvider->AllowAccess( code );
+	}
 	else {
+		_LOG("connected");
 		AccessAttemptResult result = ParseResponse( response );
 
 		SaveResponseInSystemCache( result, code );
@@ -39,10 +42,12 @@ AccessAttemptResult NetworkAccessProvider::AllowAccess( byte code[] ) {
 }
 
 void NetworkAccessProvider::SaveResponseInSystemCache( AccessAttemptResult &response, byte code[] ) {
+	System::ACS_RevokeCard( code );
+	
 	if ( response.AccessAllowed ){
 		AccessReg reg;
 
-		reg.isMaster = false;
+		reg.isMaster = 0;
 		for ( int i = 0; i < 4; i++ )
 			reg.mifareID[i] = code[i];
 		
@@ -54,9 +59,6 @@ void NetworkAccessProvider::SaveResponseInSystemCache( AccessAttemptResult &resp
 		reg.untilYear = 8192;
 
 		System::ACS_AddAccessReg( reg );
-	}
-	else {
-		System::ACS_RevokeCard( code );
 	}
 }
 
@@ -110,7 +112,7 @@ AccessAttemptResult NetworkAccessProvider::ParseResponse( String message ) {
 		idx_split = message.indexOf( SEPARATOR ) + 1;
 	}
 
-	message.toCharArray( result.Response, 33 );
+	result.Response = message;
 	
 	_LOGS( result.Response );
 

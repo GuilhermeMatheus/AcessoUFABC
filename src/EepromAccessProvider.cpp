@@ -8,59 +8,56 @@ EepromAccessProvider::EepromAccessProvider( String( *converter )( byte[] ), IDat
 EepromAccessProvider::~EepromAccessProvider() { }
 
 AccessAttemptResult EepromAccessProvider::AllowAccess( byte code[] ) {
-	AccessReg reg = System::ACS_GetAccessRegister( code );
-
-	bool notFound = true;
-	for (int i = 0; i < 4; i++) {
-		if ( reg.mifareID[i] != 0xFF ){
-			notFound = false;
-			break;
-		}
-	}
+	AccessReg reg;
+	bool found = System::ACS_GetAccessRegister( code, reg ) > 0;
 	
-	if ( notFound ) {
-		AccessAttemptResult result;
-		result.AccessAllowed = false;
+	_LOG("Found:\n	");
+	_LOGN(found, BIN);
 
-		strncpy( result.Response, converter( code ).c_str(), 16 );
-		strncpy( result.Response + 16, "Acesso Negado", 16 );
-		
-		return result;
-	}
+	_LOG("IsMaster:\n	");
+	_LOGN(reg.isMaster, BIN);
 
-	return CheckConstraints( reg );
+	if ( found )
+		return CheckConstraints( reg );
+
+	AccessAttemptResult result;
+	result.AccessAllowed = false;
+
+	result.Response = converter( code ) + "Acesso Negado";
+
+	return result;
 }
 
 AccessAttemptResult EepromAccessProvider::CheckConstraints( AccessReg &reg ) {
 	AccessAttemptResult result;
 	result.AccessAllowed = true;
-	StringCopySalutation(result.Response);
+	SetStringSalutation( result.Response );
 	
-	if ( reg.isMaster ) {
-		strncpy( result.Response + 16, "Master Permitido", 16 );
+	if ( reg.isMaster == 1 ) {
+		result.Response += "Master Permitido";
 	}
 	else if ( CheckPeriodConstraints( reg ) ) {
-		strncpy( result.Response + 16, "Acesso Permitido", 16 );
+		result.Response += "Acesso Permitido";
 	}
 	else {
 		result.AccessAllowed = false;
-		strncpy( result.Response + 16, " Acesso Negado  ", 16 );
+		result.Response += " Acesso Negado";
 	}
 
 	return result;
 }
 
-void EepromAccessProvider::StringCopySalutation( char *addr ) {
+void EepromAccessProvider::SetStringSalutation( String &str ) {
 	DateTime dateTime = dateTimeProvider->GetDateTime();
 
 	uint8_t hour = dateTime.hour();
 	
 	if (hour >= 5 && hour < 12)
-		strncpy( addr, "    Bom Dia     ", 16 );
+		str = "    Bom Dia     ";
 	else if (hour >= 12 && hour < 18)
-		strncpy( addr, "   Boa Tarde    ", 16 );
+		str = "   Boa Tarde    ";
 	else
-		strncpy( addr, "   Boa Noite    ", 16 );
+		str = "   Boa Noite    ";
 
 }
 bool EepromAccessProvider::CheckPeriodConstraints( AccessReg &reg ) {

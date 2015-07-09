@@ -66,23 +66,22 @@ void System::NOTIFY_ERROR( unsigned long duration ) {
 
 #pragma region Access
 
-bool System::ACS_RevokeCard( byte code[] ) {
-	System::accessWriter->Delete( code );
-	return true;
+bool System::ACS_RevokeCard( const byte code[] ) {
+	return System::accessWriter->Delete( code ) > 0;
 }
 
-bool System::ACS_AddAccessReg( AccessReg &value ) {
-	System::accessWriter->Write( value );
-	return true;
+bool System::ACS_AddAccessReg( const AccessReg &value ) {
+	return System::accessWriter->Write( value ) > 0;
 }
 
-//TODO: Usar um tipo virtual para Salvar os dados
-bool System::ACS_RevokeMasterCard( uint32_t card ) {
-	return false;
-}
-//TODO: Usar um tipo virtual para Salvar os dados
-bool System::ACS_AddMasterCard( uint32_t card ) {
-	return false;
+bool System::ACS_AddMasterCard( const byte code[] ) {
+	AccessReg value = AccessReg();
+
+	value.isMaster = true;
+	for (int i = 0; i < 4; i++)
+		value.mifareID[i] = code[i];
+
+	return System::accessWriter->Write( value ) > 0;
 }
 
 uint32_t System::ACS_GetPassword() {
@@ -92,24 +91,8 @@ bool System::ACS_SetPassword( uint32_t password ) {
 	return setUInt32Helper(password, OFFSET_ACS_Password);
 }
 
-//TODO: Mudar retorno para Int e usar ponteiro de accessReg como parâmetro
-AccessReg System::ACS_GetAccessRegister( byte mifareID[4] ) {
-	AccessReg result;
-	for (int i = 0; i < 4; i++) result.mifareID[i] = 0xFF;
-
-	byte current[4];
-
-	bool found;
-	for (int add = OFFSET_ACS_Regs; add < MAX_EEPROM_SIZE && !found; add += sizeof(AccessReg)) {
-		for (int i = 0; i < 4; i++) {
-			if (EEPROM.read(add + i) != mifareID[i])
-				break;
-
-			eeprom_read_block((void*)&result, (void*)add, sizeof(AccessReg));
-			found = true;
-		}
-	}
-	return result;
+int System::ACS_GetAccessRegister( const byte mifareID[4], AccessReg &reg  ) {
+	return System::accessWriter->Get( mifareID, reg );
 }
 #pragma endregion
 

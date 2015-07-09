@@ -5,18 +5,16 @@ GuardianKeeper::GuardianKeeper( AccessProvider *accessProvider, LiquidCrystal_I2
 	this->lcd = lcd;
 }
 
-GuardianKeeper::~GuardianKeeper() {
-
-}
+GuardianKeeper::~GuardianKeeper() { }
 
 int GuardianKeeper::AllowAccess( byte cardId[] ) {
 	AccessAttemptResult result = accessProvider->AllowAccess( cardId );
 
 	lcd->clear();
-
-	lcd->println( result.Response );
+	
+	lcd->print( result.Response.substring( 0, 16 ) );
 	lcd->setCursor( 0, 1 );
-	lcd->println( result.Response+16 );
+	lcd->print( result.Response.substring( 16 ) );
 	
 	return result.AccessAllowed ? GiveAccess( result ) : RestrictAccess( result );
 }

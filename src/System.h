@@ -125,7 +125,7 @@ Access settings.
 	* @param code O ID de 4 bytes do registro.
 	* @return True quando o registro for removido com sucesso ou, caso contrário, False.
 	*/
-	static bool				ACS_RevokeCard( byte code[] );
+	static bool				ACS_RevokeCard( const byte code[] );
 	
 	/**
 	* Grava o registro na memória interna da controladora.
@@ -133,23 +133,15 @@ Access settings.
 	* @param value O registro a ser salvo na memória interna da controladora.
 	* @return True quando o registro for inserido com sucesso ou, caso contrário, False.
 	*/
-	static bool				ACS_AddAccessReg( AccessReg &value );
-
-	/**
-	* Remove registro com o código {@code card} da lista de códigos administradores da controladora.
-	* 
-	* @param card O ID de 4 bytes do registro.
-	* @return True quando o código for removido com sucesso ou, caso contrário, False.
-	*/
-	static bool				ACS_RevokeMasterCard( uint32_t card );
-	
+	static bool				ACS_AddAccessReg( const AccessReg &value );
+		
 	/**
 	* Adiciona o código {@code card} na lista de códigos administradores da controladora.
 	* 
 	* @param card O ID de 4 bytes do registro.
 	* @return True quando o código for inserido com sucesso ou, caso contrário, False.
 	*/
-	static bool				ACS_AddMasterCard( uint32_t card );
+	static bool				ACS_AddMasterCard( const byte code[] );
 
 	/**
 	* Acessa o campo de senha nas configurações da controladora.
@@ -167,12 +159,13 @@ Access settings.
 	static bool				ACS_SetPassword( uint32_t password );
 	
 	/**
-	* Faz uma busca nos registros salvos na controladora pelo {@code mifareID}.
+	* Faz uma busca nos registros salvos na controladora pelo {@code mifareID} e hidrata o objeto {@code reg}.
 	* 
 	* @param mifareID O ID de 4 bytes do registro.
-	* @return Retorna o registro quando encontrado ou, caso contrário, um registro vazio com os 4 bytes de ID iguais a {@code 0xFF}.
+	* @param reg O objeto a ser hidratado quando o registro for encontrado.
+	* @return Retorna 1 quando o registro for encontrado ou, caso contrário, -1.
 	*/
-	static AccessReg		ACS_GetAccessRegister( byte mifareID[4] );
+	static int				ACS_GetAccessRegister( const byte mifareID[4], AccessReg &reg );
 #pragma endregion
 
 
