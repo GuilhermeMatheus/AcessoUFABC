@@ -69,9 +69,6 @@
     <ClInclude Include="MifareIDProvider.h">
       <Filter>Header Files\IIDProvider</Filter>
     </ClInclude>
-    <ClInclude Include="IMifareIDProvider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ViewBase.h">
       <Filter>Header Files\View</Filter>
     </ClInclude>
@@ -118,7 +115,10 @@
       <Filter>Header Files\Access</Filter>
     </ClInclude>
     <ClInclude Include="NTPDateTimeProvider.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\DateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="IMifareIDProvider.h">
+      <Filter>Header Files\IIDProvider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +156,7 @@
       <Filter>Source Files\Access</Filter>
     </ClCompile>
     <ClCompile Include="NTPDateTimeProvider.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\DateTime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
