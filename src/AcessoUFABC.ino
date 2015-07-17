@@ -89,9 +89,9 @@ void setup() {
 
 	root::_lcd->print( F( "    UFABC" ) );
 	root::_lcd->setCursor( 0, 1 );
-	root::_lcd->print( F( "Starting..." ) );
+	root::_lcd->print( F( "  Iniciando..." ) );
 	
-	Serial.begin(9600);
+	Serial.begin( 9600 );
 
 	Wire.begin();
 	SPI.begin();
@@ -128,7 +128,8 @@ void setup() {
 	NetworkAccessProvider *nap =		new NetworkAccessProvider( root::_converter, eap );
 	root::_guardianKeeper =				new GuardianKeeper( nap, root::_lcd );
 
-	root::checkNtpServer( false );
+	if ( System::DT_getUseNTP() )
+		root::checkNtpServer( false );
 
 	root::_idleView->ViewChanged();
 }
@@ -140,6 +141,4 @@ void loop() {
 	root::checkMenuRequest();
 	root::checkCardReader();
 	root::checkNtpServer();
-
-	_LOG("end loop");
 }
