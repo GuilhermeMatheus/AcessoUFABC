@@ -32,24 +32,28 @@ void								okMenuAcessoAlterarSenha	( MenuPanelView* );
 
 void								okMenuDataHoraAjustarData ( MenuPanelView* );
 void								okMenuDataHoraServidorNTP ( MenuPanelView* );
-void								okMenuDataHoraUsarNTP ( MenuPanelView* );
+void								okMenuDataHoraUsarNTP	  ( MenuPanelView* );
 
-void								okMenuRedeDHCP		 ( MenuPanelView* );
-void								okMenuRedeEnderecoIP ( MenuPanelView* );
-void								okMenuRedeMascara	 ( MenuPanelView* );
-void								okMenuRedeGateway	 ( MenuPanelView* );
+bool								checkDHCP				 ( MenuPanelView* );
+void								okMenuRedeDHCP			 ( MenuPanelView* );
+void								okMenuRedeEnderecoIP	 ( MenuPanelView* );
+void								okMenuRedeMascara		 ( MenuPanelView* );
+void								okMenuRedeGateway		 ( MenuPanelView* );
+void								okMenuRedeNumeroTerminal ( MenuPanelView* );
 
 void								okMenuServidorEnderecoIP ( MenuPanelView* );
 void								okMenuServidorPorta		 ( MenuPanelView* );
+void								okMenuServidorComputador ( MenuPanelView* );
 
 void								okMenuAcionamentoTipo  ( MenuPanelView* );
 void								okMenuAcionamentoTempo ( MenuPanelView* );
 
 bool								editTemplateFlag	 ( const __FlashStringHelper*, String&, String&, bool, MenuPanelView*);
-uint16_t							editTemplateUInt16	 ( const __FlashStringHelper*, uint16_t, MenuPanelView *);
-uint32_t							editTemplateIP		 ( const __FlashStringHelper*, uint32_t, MenuPanelView *);
-DateTime							editTemplateDateTime ( const __FlashStringHelper*, DateTime, MenuPanelView *);
-uint32_t							editTemplateUInt32	 ( const __FlashStringHelper*, uint32_t, MenuPanelView *);
+uint8_t								editTemplateUInt8	 ( const __FlashStringHelper*, uint8_t, MenuPanelView* );
+uint16_t							editTemplateUInt16	 ( const __FlashStringHelper*, uint16_t, MenuPanelView* );
+uint32_t							editTemplateIP		 ( const __FlashStringHelper*, uint32_t, MenuPanelView* );
+DateTime							editTemplateDateTime ( const __FlashStringHelper*, DateTime, MenuPanelView* );
+uint32_t							editTemplateUInt32	 ( const __FlashStringHelper*, uint32_t, MenuPanelView* );
 uint32_t							editTemplatePassword ( const __FlashStringHelper*, MenuPanelView *);
 int									editTemplateMfrID	 ( byte&, MenuPanelView*);
 #pragma endregion
@@ -69,6 +73,7 @@ MenuOption innerMenuDataHora[] = {
 };														  
 														  
 MenuOption innerMenuRede[] = {							  
+	{ "Numero terminal",			okMenuRedeNumeroTerminal,				gotoRootMenu }, 
 	{ "DHCP",						okMenuRedeDHCP,							gotoRootMenu }, 
 	{ "Endereco IP",				okMenuRedeEnderecoIP,					gotoRootMenu }, 
 	{ "Mascara",					okMenuRedeMascara,						gotoRootMenu }, 
@@ -78,6 +83,7 @@ MenuOption innerMenuRede[] = {
 MenuOption innerMenuServidor[] = {
 	{ "Endereco IP",				okMenuServidorEnderecoIP,				gotoRootMenu }, 
 	{ "Porta",						okMenuServidorPorta,					gotoRootMenu }, 
+	{ "Computador",					okMenuServidorComputador,				gotoRootMenu }
 };
 
 MenuOption innerMenuAcionamento[] = {
@@ -102,7 +108,7 @@ void gotoDataHora( MenuPanelView *mpv ) {
 	setActivatedMenuOption( innerMenuDataHora, 3 );
 }
 void gotoRede( MenuPanelView *mpv ) {
-	setActivatedMenuOption( innerMenuRede, 4 );
+	setActivatedMenuOption( innerMenuRede, 5 );
 }
 void gotoServidor( MenuPanelView *mpv ) {
 	setActivatedMenuOption( innerMenuServidor, 2 );
@@ -344,22 +350,52 @@ void okMenuRedeDHCP( MenuPanelView *mpv ) {
 	System::NW_setIsDHCP(newDhcpFlag);
 }
 void okMenuRedeEnderecoIP( MenuPanelView *mpv ) {
+	if ( checkDHCP( mpv ) )
+		return;
+
 	uint32_t ip = System::NW_getIpAddress();
 	uint32_t newIp = editTemplateIP( F( "IP de Rede:" ), ip, mpv );
 
 	System::NW_setIpAddress( newIp );
 }
 void okMenuRedeMascara( MenuPanelView *mpv ) {
+	if ( checkDHCP( mpv ) )
+		return;
+
 	uint32_t mask = System::NW_getMask();
 	uint32_t newMask = editTemplateIP( F( "Mascara de Rede:" ), mask, mpv );
 	
 	System::NW_setMask( newMask );
 }
 void okMenuRedeGateway( MenuPanelView *mpv ) {
+	if ( checkDHCP( mpv ) )
+		return;
+
 	uint32_t gateway = System::NW_getGateway();
-	uint32_t newGateway = editTemplateIP( F( "Mascara de Rede:" ), gateway, mpv );
+	uint32_t newGateway = editTemplateIP( F( "Gateway:" ), gateway, mpv );
 	
 	System::NW_setGateway( newGateway );
+}
+void okMenuRedeNumeroTerminal( MenuPanelView *mpv ) {
+	uint8_t terminal = System::NW_getGateway();
+	uint8_t newTerminal = editTemplateUInt8( F( "Numero terminal:" ), terminal, mpv );
+	
+	System::NW_setGateway( newTerminal );
+}
+
+bool checkDHCP( MenuPanelView *mpv ) {
+	if ( System::NW_getIsDHCP() ) {
+		mpv->lcd->clear();
+		
+		mpv->lcd->print( F( "DHCP habilitado" ) );
+		mpv->lcd->setCursor( 0, 1 );
+		mpv->lcd->print( F( "opc n disponivel" ) );
+
+		System::NOTIFY_ERROR();
+
+		return true;
+	}
+	return false;
 }
 #pragma endregion
 
@@ -375,6 +411,12 @@ void okMenuServidorPorta( MenuPanelView *mpv ) {
 	uint16_t newPort = editTemplateUInt16( F( "Porta Servidor:" ), port, mpv );
 	
 	System::SRV_setPort( newPort );
+}
+void okMenuServidorComputador( MenuPanelView *mpv ) {
+	uint8_t computer = System::SRV_getComputer();
+	uint8_t newComputer = editTemplateUInt8( F( "Computador:" ), computer, mpv );
+	
+	System::SRV_setComputer( newComputer );
 }
 #pragma endregion
 
@@ -444,6 +486,48 @@ boolean editTemplateFlag( const __FlashStringHelper * editorDisplay,
 
 	return result;	
 }
+
+uint8_t editTemplateUInt8( const __FlashStringHelper *editorDisplay, uint8_t current, MenuPanelView *mpv ) {
+	mpv->lcd->clear();
+	mpv->lcd->print( editorDisplay );
+	
+	uint8_t result;
+	while ( true ) {
+		mpv->lcd->setCursor( 7, 1 );
+	
+		if ( current < 10 )
+			mpv->lcd->print('0');
+
+		mpv->lcd->print( current, DEC );
+
+		result = 0;
+
+		mpv->lcd->cursor_on();
+		for ( uint8_t i = 0; i < 2; i++ )
+		{
+			mpv->lcd->setCursor( 7+i, 1 );
+
+			char newValue;
+			do {
+				newValue = mpv->keyPadListener->WaitForInput();
+				if ( newValue == '#' ) {
+					mpv->lcd->cursor_off();
+					return current;
+				}
+			} while ( newValue < '0' || newValue > '9' );
+
+			result = ( result * 10 ) + newValue - '0';
+			mpv->lcd->print( newValue );
+		}
+		mpv->lcd->cursor_off();
+
+		if ( result <= 99 )
+			break;
+	}
+
+	return ( uint16_t )result;
+}
+
 
 uint16_t editTemplateUInt16( const __FlashStringHelper *editorDisplay, uint16_t current, MenuPanelView *mpv ) {
 	mpv->lcd->clear();
@@ -548,13 +632,16 @@ uint32_t editTemplateIP( const __FlashStringHelper * editorDisplay, uint32_t cur
 
 DateTime editTemplateDateTime( const __FlashStringHelper * editorDisplay, DateTime current, MenuPanelView *mpv )
 {
+#pragma warning( push )
+#pragma warning( disable : Woverflow)
 	uint8_t values[] = { 
 		current.hour(),
 		current.minute(),
 		current.day(),
 		current.month(),
-		current.year() % 100
+		current.year() % 100 // As "2147483647 % 100 = 47", you can ignore narrowing conversion  warning
 	};
+#pragma warning( pop ) //Woverflow
 	
 	char separators[] = { ':', ' ', '/', '/', ' ' };
 	uint8_t maxValues[] = { 23, 59, 31, 12, 99 };

@@ -133,6 +133,17 @@ bool System::NW_setGateway(uint32_t value)
 {
 	return setUInt32Helper(value, OFFSET_NW_Gateway);
 }
+
+uint8_t System::NW_getTerminalNumber()
+{
+	return EEPROM.read( OFFSET_NW_TerminalNumber );
+}
+bool System::NW_setTerminalNumber(uint8_t value)
+{
+	EEPROM.write( OFFSET_NW_TerminalNumber, value );
+	return true;
+}
+
 #pragma endregion
 
 #pragma region Server 
@@ -163,10 +174,10 @@ bool System::SRV_setPort(uint16_t value) {
 }
 
 uint8_t System::SRV_getComputer() {
-	return EEPROM.read(OFFSET_SRV_Computer);
+	return EEPROM.read( OFFSET_SRV_Computer );
 }
 bool System::SRV_setComputer(uint8_t value) {
-	EEPROM.write(OFFSET_SRV_Computer, value);
+	EEPROM.write( OFFSET_SRV_Computer, value );
 	return true;
 }
 
@@ -198,7 +209,7 @@ bool System::ACT_setTime(uint16_t value)
 #pragma endregion
 
 #pragma region DateTime 
-bool System::SRV_loadNTPIpAddressInto( byte target[4] ) {
+bool System::DT_loadNTPIpAddressInto( byte target[4] ) {
 	//TODO: Salvar o ip com os octetos na ordem correta
 	for ( int i = 3; i >= 0; i-- )
 		target[3-i] = EEPROM.read( OFFSET_DT_NTPIpAddress + i );

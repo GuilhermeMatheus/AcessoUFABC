@@ -15,19 +15,21 @@
 #define MAX_EEPROM_SIZE		  1024
 #endif
 
-#define OFFSET_ACS_Password		 0
-#define OFFSET_NW_IsDHCP		 4
-#define OFFSET_NW_IpAddress		 5
-#define OFFSET_NW_Mask			 9 
-#define OFFSET_NW_Gateway		13
-#define OFFSET_SRV_IpAddress	17
-#define OFFSET_SRV_Port			21
-#define OFFSET_ACT_Type			23
-#define OFFSET_ACT_Time			24
-#define OFFSET_DT_NTPIpAddress	26
-#define OFFSET_DT_UseNTP		30
-#define OFFSET_SRV_Computer		31
-#define OFFSET_ACS_Regs			32
+#define OFFSET_ACS_Password		  0
+#define OFFSET_NW_IsDHCP		  4
+#define OFFSET_NW_IpAddress		  5
+#define OFFSET_NW_Mask			  9 
+#define OFFSET_NW_Gateway		 13
+#define OFFSET_SRV_IpAddress	 17
+#define OFFSET_SRV_Port			 21
+#define OFFSET_ACT_Type			 23
+#define OFFSET_ACT_Time			 24
+#define OFFSET_DT_NTPIpAddress	 26
+#define OFFSET_DT_UseNTP		 30
+#define OFFSET_SRV_Computer		 31
+#define OFFSET_NW_TerminalNumber 32
+#define OFFSET_SETUP			 33
+#define OFFSET_ACS_Regs			 34
 
 #define LED_RED_PIN				 8
 #define LED_GREEN_PIN			 7
@@ -230,6 +232,20 @@ Network settings.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
 	static bool				NW_setGateway( uint32_t value );
+
+	/**
+	* Acessa o número de terminal usado pela controladora.
+	* 
+	* @return O número de terminal usado pela controladora.
+	*/
+	static uint8_t			NW_getTerminalNumber();
+	/**
+	* Sobrescreve o número de terminal usado pela controladora.
+	* 
+	* @param value O novo número de terminal da controladora.
+	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
+	*/
+	static bool				NW_setTerminalNumber( uint8_t value );
 #pragma endregion
 
 
@@ -276,15 +292,15 @@ Server settings.
 	static bool				SRV_setPort( uint16_t value );
 
 	/**
-	* Acessa o código do servidor de acesso.
+	* Acessa o número do computador de acesso.
 	* 
-	* @return O código do servidor de acesso, um inteiro entre 0 e 99.
+	* @return O número do computador de acesso, um inteiro entre 0 e 99.
 	*/
 	static uint8_t			SRV_getComputer();
 	/**
-	* Sobrescreve o código do servidor de acesso.
+	* Sobrescreve o número do computador de acesso.
 	* 
-	* @param value O código do servidor de acesso, um inteiro que deve estar entre 0 e 99.
+	* @param value O número do computador de acesso, um inteiro que deve estar entre 0 e 99.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
 	static bool				SRV_setComputer( uint8_t value );
@@ -339,7 +355,7 @@ DateTime settings.
 	* @param target O endereço a ser usado para clonar o endereço IP do servidor de acesso.
 	* @return True quando a operação for realizada com sucesso ou, caso contrário, False.
 	*/
-	static bool				SRV_loadNTPIpAddressInto( byte target[4] );
+	static bool				DT_loadNTPIpAddressInto( byte target[4] );
 
 	/**
 	* Acessa a data usada pelo {@code rtc}.

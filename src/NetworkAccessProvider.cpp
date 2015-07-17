@@ -4,14 +4,23 @@
 void NetworkAccessProvider::begin()
 {
 	byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-	IPAddress ip(10, 0, 0, 2);
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	pinMode(53, OUTPUT);
 	_LOG("AVR_ATmega");
 #endif
 
-	Ethernet.begin(mac, ip);
+	if ( System::NW_getIsDHCP() )
+		Ethernet.begin( mac );
+	
+	else {
+		IPAddress ip(10, 0, 0, 2);
+		//IPAddress dns(10, 0, 0, 2);
+		//IPAddress gateway(10, 0, 0, 2);
+
+		Ethernet.begin(mac, ip);
+		//Ethernet.begin(mac, ip, dns, gateway);
+	}
 }
 
 NetworkAccessProvider::NetworkAccessProvider( String( *converter )( byte[] ), AccessProvider *connectionFallbackProvider )
@@ -56,15 +65,15 @@ void NetworkAccessProvider::SaveResponseInSystemCache( AccessAttemptResult &resp
 		reg.hourEnd = 24;
 		reg.untilDay = 31;
 		reg.untilMon = 15;
-		reg.untilYear = 8192;
+		reg.untilYear = (uint16_t)8192;
 
 		System::ACS_AddAccessReg( reg );
 	}
 }
 
 String NetworkAccessProvider::GetPostMessage( byte code[] ) {
-	String postMessage = "";
-	postMessage += String( controllerPort, DEC ) + ';';
+	String postMessage = String( System::NW_getTerminalNumber(), DEC ) + ';';
+	
 	postMessage += String( System::SRV_getComputer(), DEC ) + ';';
 	postMessage += "0;1;";
 	postMessage += converter(code) + ';';

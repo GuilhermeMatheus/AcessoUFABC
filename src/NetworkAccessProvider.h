@@ -17,7 +17,6 @@ class NetworkAccessProvider :
 private:
 	EthernetServer					*server;
 	AccessProvider					*connectionFallbackProvider;
-	int8_t							controllerPort;
 	AccessAttemptResult				ParseResponse( String message );
 	String							GetPostMessage( byte code[] );
 	String							Post( String message );

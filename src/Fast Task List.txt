@@ -1,6 +1,10 @@
--Remover todos os warnings ( [-Wunknown-pragmas] )
--Remover todos os char*;
 -Soldar mosfet;
+-Rever as configurações de rede (ie, o IP está hard code)
+-Usar memória externa
+-Escrever método de liberar porta
+
+-Remover todos os warnings ( [-Wunknown-pragmas] )
 -Fazer uso do servidor NTP;
--Criar classes auxiliares para salvar registros master ou não master;
+-Reservar endereço na memória para guardar Flag de setup concluído ou não
 -Definir método de SETUP para quando o sistema for inicializado pela primeira vez;
+-No setup, limpar a área de RegisterReg
