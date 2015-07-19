@@ -32,6 +32,7 @@
 #define OFFSET_ACS_Regs			 34
 
 #define LED_RED_PIN				 8
+#define GATE_PIN				 6
 #define LED_GREEN_PIN			 7
 #define BUZZER_PIN				 5
 
@@ -336,6 +337,11 @@ Actuation settings.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
 	static bool				ACT_setTime( uint16_t value );
+
+	/**
+	* Libera a porta e pausa a aplicação pelo tempo determinado em System::setTime(uint16_t).
+	*/
+	static void				FreeGate();
 #pragma endregion
 	
 
@@ -397,6 +403,11 @@ DateTime settings.
 	*/
 	static bool				DT_setNTPIpAddress( const byte ip[4] );
 #pragma endregion
+
+private:
+
+	static void				CloseGate();
+	static void				OpenGate();
 
 	static bool				readIpHelper( byte target[4], int8_t offset );
 

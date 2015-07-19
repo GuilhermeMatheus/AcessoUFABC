@@ -31,7 +31,7 @@ inline int GuardianKeeper::GiveAccess( AccessAttemptResult &result ) {
 	
 	System::BEEP( 75 );
 	
-	delay( 3000 ); //Todo: trocar por System::LigarAcionador
+	System::FreeGate();
 
 	System::LED_GREEN_OFF();
 	

@@ -2,12 +2,15 @@
 
 IAccessRegWriter *System::accessWriter;
 
-void System::begin( IAccessRegWriter *accessWriter ) {
+void System::begin(IAccessRegWriter *accessWriter) {
 	pinMode(LED_RED_PIN, OUTPUT);
 	pinMode(LED_GREEN_PIN, OUTPUT);
 	pinMode(BUZZER_PIN, OUTPUT);
+	pinMode(GATE_PIN, OUTPUT);
 
 	System::accessWriter = accessWriter;
+
+	CloseGate();
 }
 
 #pragma warning( push )
@@ -186,6 +189,22 @@ bool System::ACT_setTime(uint16_t value)
 	eeprom_write_block((const void*)&value, (void*)OFFSET_ACT_Time, sizeof(uint16_t));
 	return setUInt32Helper(value, true);
 }
+
+void System::FreeGate() {
+	OpenGate();
+
+	uint16_t delayTime = System::ACT_getTime();
+	delay( delayTime );
+
+	CloseGate();
+}
+void System::CloseGate() {
+	digitalWrite( GATE_PIN, System::ACT_getType() ? LOW : HIGH);
+}
+void System::OpenGate() {
+	digitalWrite( GATE_PIN, System::ACT_getType() ? HIGH : LOW);
+}
+
 #pragma endregion
 
 #pragma region DateTime 
