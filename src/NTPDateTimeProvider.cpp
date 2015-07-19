@@ -20,6 +20,17 @@ bool NTPDateTimeProvider::TryGetDateTime( DateTime &target, bool checkConstraint
 	target = GetDateTime();
 	bool result = target.year() > 2000;
 
+	_LOG("Ano");
+	_LOGN(target.year(), DEC);
+	_LOG("Mes");
+	_LOGN(target.month(), DEC);
+	_LOG("Dia");
+	_LOGN(target.day(), DEC);
+	_LOG("Hora");
+	_LOGN(target.hour(), DEC);
+	_LOG("Min");
+	_LOGN(target.minute(), DEC);
+
 	if ( result ) {
 		backoffExponent = 27; //2^27 = 134217728 millis = 1,5 days
 		lastCheckBackoff = millis();
@@ -48,81 +59,67 @@ bool NTPDateTimeProvider::CheckBackoff() {
 }
 
 DateTime NTPDateTimeProvider::GetDateTime() {
+	EthernetUDP udp;
+	static int udpInited = udp.begin(123); // open socket on arbitrary port
 
-	EthernetClient client;
-	byte server[4];
-	System::SRV_loadNTPIpAddressInto( server );
-	
-	unsigned long time = 0;
+	byte target[4];  // NTP server
+	System::DT_loadNTPIpAddressInto( target );
 
-	// Just choose any reasonably busy web server, the load is really low
-	if ( client.connect( server, 80 ) )
-	{
-		// Make an HTTP 1.1 request which is missing a Host: header
-		// compliant servers are required to answer with an error that includes
-		// a Date: header.
-		client.print( F( "GET / HTTP/1.1 \r\n\r\n" ) );
 
-		char buf[5];			// temporary buffer for characters
-		client.setTimeout( 5000 );
-		if ( client.find( ( char* ) "\r\nDate: " )	// look for Date: header
-			&& client.readBytes( buf, 5 ) == 5 )	// discard
-		{
-			unsigned day = client.parseInt();		// day
-			client.readBytes(buf, 1);				// discard
-			client.readBytes(buf, 3);				// month
-			int year = client.parseInt();			// year
-			byte hour = client.parseInt();			// hour
-			byte minute = client.parseInt();		// minute
-			byte second = client.parseInt();		// second
+	// Only the first four bytes of an outgoing NTP packet need to be set
+	// appropriately, the rest can be whatever.
+	const long ntpFirstFourBytes = 0xEC0600E3; // NTP request header
 
-			int daysInPrevMonths;
-			switch (buf[0])
-			{
-			case 'F': daysInPrevMonths = 31; break;		// Feb
-			case 'S': daysInPrevMonths = 243; break;	// Sep
-			case 'O': daysInPrevMonths = 273; break;	// Oct
-			case 'N': daysInPrevMonths = 304; break;	// Nov
-			case 'D': daysInPrevMonths = 334; break;	// Dec
-			default:
-				if (buf[0] == 'J' && buf[1] == 'a')
-					daysInPrevMonths = 0;				// Jan
-				else if (buf[0] == 'A' && buf[1] == 'p')
-					daysInPrevMonths = 90;				// Apr
-				else switch (buf[2])
-				{
-				case 'r': daysInPrevMonths = 59; break;	// Mar
-				case 'y': daysInPrevMonths = 120; break;// May
-				case 'n': daysInPrevMonths = 151; break;// Jun
-				case 'l': daysInPrevMonths = 181; break;// Jul
-				default: // add a default label here to avoid compiler warning
-				case 'g': daysInPrevMonths = 212; break;// Aug
-				}
-			}
+	// Fail if WiFiUdp.begin() could not init a socket
+	if (!udpInited)
+		return 0;
 
-			// This code will not work after February 2100
-			// because it does not account for 2100 not being a leap year and because
-			// we use the day variable as accumulator, which would overflow in 2149
-			day += (year - 1970) * 365;	// days from 1970 to the whole past year
-			day += (year - 1969) >> 2;	// plus one day per leap year 
-			day += daysInPrevMonths;	// plus days for previous months this year
-			if (daysInPrevMonths >= 59	// if we are past February
-				&& ((year & 3) == 0))	// and this is a leap year
-				day += 1;			// add one day
-			// Remove today, add hours, minutes and seconds this month
-			time = (((day - 1ul) * 24 + hour) * 60 + minute) * 60 + second;
-		}
+	// Clear received data from possible stray received packets
+	udp.flush();
+
+	// Send an NTP request
+	if (!(udp.beginPacket(target, 123) // 123 is the NTP port
+		&& udp.write((byte *)&ntpFirstFourBytes, 48) == 48
+		&& udp.endPacket()))
+		return 0;				// sending request failed
+
+	// Wait for response; check every pollIntv ms up to maxPoll times
+	const int pollIntv = 150;		// poll every this many ms
+	const byte maxPoll = 15;		// poll up to this many times
+	int pktLen;				// received packet length
+	for (byte i = 0; i < maxPoll; i++) {
+		if ((pktLen = udp.parsePacket()) == 48)
+			break;
+		delay(pollIntv);
 	}
+	if (pktLen != 48)
+		return 0;				// no correct packet received
 
-	delay( 10 );
-	client.flush();
-	client.stop();
+	// Read and discard the first useless bytes
+	// Set useless to 32 for speed; set to 40 for accuracy.
+	const byte useless = 40;
+	for (byte i = 0; i < useless; ++i)
+		udp.read();
 
-	if ( time > 0 )
-		return DateTime( time );
+	// Read the integer part of sending time
+	unsigned long time = udp.read();	// NTP time
+	for (byte i = 1; i < 4; i++)
+		time = time << 8 | udp.read();
 
-	return DateTime( SECONDS_FROM_1970_TO_2000 );
+	// Round to the nearest second if we want accuracy
+	// The fractionary part is the next byte divided by 256: if it is
+	// greater than 500ms we round to the next second; we also account
+	// for an assumed network delay of 50ms, and (0.5-0.05)*256=115;
+	// additionally, we account for how much we delayed reading the packet
+	// since its arrival, which we assume on average to be pollIntv/2.
+	time += (udp.read() > 115 - pollIntv / 8);
+
+	// Discard the rest of the packet
+	udp.flush();
+
+	return DateTime( time - 2208988800ul );		// convert NTP time to Unix time
 }
+
 
 String NTPDateTimeProvider::ToString() {
 	return "na";

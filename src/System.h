@@ -191,47 +191,43 @@ Network settings.
 	*/
 	static bool				NW_setIsDHCP( bool value );
 	
-	/**
-	* Acessa o próprio IP nas configurações da controladora.
-	* 
-	* @return O IP da controladora.
-	*/
-	static uint32_t			NW_getIpAddress();
+	static bool				NW_loadIpAddressInto(byte target[4]);
+
 	/**
 	* Sobrescreve o IP usado pela controladora.
 	* 
 	* @param value O novo IP da controladora.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
-	static bool				NW_setIpAddress( uint32_t value );
+	static bool				NW_setIpAddress( const byte value[4] );
 	
 	/**
 	* Acessa a máscara de rede usada pela controladora.
 	* 
 	* @return A máscara de rede usada pela controladora.
 	*/
-	static uint32_t			NW_getMask();
+	static bool				NW_loadMaskInto( byte target[4] );
 	/**
 	* Sobrescreve a máscara de rede usada pela controladora.
 	* 
 	* @param value A nova máscara de rede da controladora.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
-	static bool				NW_setMask( uint32_t value );
+	static bool				NW_setMask( const byte value[4] );
 
 	/**
 	* Acessa o endereço IP do gateway usado pela controladora.
 	* 
 	* @return O endereço IP do gateway usado pela controladora.
 	*/
-	static uint32_t			NW_getGateway();
+	static bool				NW_loadGatewayInto( byte target[4] );
 	/**
 	* Sobrescreve o endereço IP do gateway usado pela controladora.
 	* 
 	* @param value O novo endereço IP do gateway da controladora.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
-	static bool				NW_setGateway( uint32_t value );
+	static bool				NW_setGateway( const byte value[4] );
 
 	/**
 	* Acessa o número de terminal usado pela controladora.
@@ -275,7 +271,7 @@ Server settings.
 	* @param value O novo endereço IP do servidor da controladora.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
-	static bool				SRV_setIpAddress( uint32_t value );
+	static bool				SRV_setIpAddress( const byte value[4] );
 
 	/**
 	* Acessa a porta do servidor usada pela controladora.
@@ -396,11 +392,15 @@ DateTime settings.
 	/**
 	* Sobrescreve o endereço IP do servidor NTP usado pela controladora.
 	* 
-	* @param value O endereço IP do servidor NTP.
+	* @param ip O endereço IP do servidor NTP.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
-	static bool				DT_setNTPIpAddress( uint32_t value );
+	static bool				DT_setNTPIpAddress( const byte ip[4] );
 #pragma endregion
+
+	static bool				readIpHelper( byte target[4], int8_t offset );
+
+	static bool				writeIpHelper( const byte value[4], int8_t offset );
 
 	/**
 	* Faz a leitura de um número inteiro de 32 bits

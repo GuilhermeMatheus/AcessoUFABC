@@ -1,6 +1,6 @@
 #include "System.h"
 
-IAccessRegWriter* System::accessWriter;
+IAccessRegWriter *System::accessWriter;
 
 void System::begin( IAccessRegWriter *accessWriter ) {
 	pinMode(LED_RED_PIN, OUTPUT);
@@ -65,15 +65,12 @@ void System::NOTIFY_ERROR( unsigned long duration ) {
 #pragma endregion
 
 #pragma region Access
-
 bool System::ACS_RevokeCard( const byte code[] ) {
 	return System::accessWriter->Delete( code ) > 0;
 }
-
 bool System::ACS_AddAccessReg( const AccessReg &value ) {
 	return System::accessWriter->Write( value ) > 0;
 }
-
 bool System::ACS_AddMasterCard( const byte code[] ) {
 	AccessReg value = AccessReg();
 
@@ -83,14 +80,12 @@ bool System::ACS_AddMasterCard( const byte code[] ) {
 
 	return System::accessWriter->Write( value ) > 0;
 }
-
 uint32_t System::ACS_GetPassword() {
 	return getUInt32Helper(OFFSET_ACS_Password);
 }
-bool System::ACS_SetPassword( uint32_t password ) {
+bool System::ACS_SetPassword(uint32_t password) {
 	return setUInt32Helper(password, OFFSET_ACS_Password);
 }
-
 int System::ACS_GetAccessRegister( const byte mifareID[4], AccessReg &reg  ) {
 	return System::accessWriter->Get( mifareID, reg );
 }
@@ -107,31 +102,25 @@ bool System::NW_setIsDHCP(bool value)
 	return true;
 }
 
-uint32_t System::NW_getIpAddress()
-{
-	return getUInt32Helper(OFFSET_NW_IpAddress);
+bool System::NW_loadIpAddressInto( byte target[4] ){
+	return readIpHelper( target, OFFSET_NW_IpAddress );
 }
-bool System::NW_setIpAddress(uint32_t value)
-{
-	return setUInt32Helper(value, OFFSET_NW_IpAddress);
+bool System::NW_setIpAddress( const byte value[4] ) {
+	return writeIpHelper( value, OFFSET_NW_IpAddress );
 }
 
-uint32_t System::NW_getMask()
-{
-	return getUInt32Helper(OFFSET_NW_Mask);
+bool System::NW_loadMaskInto( byte target[4] ) {
+	return readIpHelper( target, OFFSET_NW_Mask );
 }
-bool System::NW_setMask(uint32_t value)
-{
-	return setUInt32Helper(value, OFFSET_NW_Mask);
+bool System::NW_setMask( const byte value[4] ) {
+	return writeIpHelper( value, OFFSET_NW_Mask );
 }
 
-uint32_t System::NW_getGateway()
-{
-	return getUInt32Helper(OFFSET_NW_Gateway);
+bool System::NW_loadGatewayInto( byte target[4] ) {
+	return readIpHelper( target, OFFSET_NW_Gateway );
 }
-bool System::NW_setGateway(uint32_t value)
-{
-	return setUInt32Helper(value, OFFSET_NW_Gateway);
+bool System::NW_setGateway( const byte value[4] ) {
+	return writeIpHelper( value, OFFSET_NW_Gateway );
 }
 
 uint8_t System::NW_getTerminalNumber()
@@ -143,23 +132,14 @@ bool System::NW_setTerminalNumber(uint8_t value)
 	EEPROM.write( OFFSET_NW_TerminalNumber, value );
 	return true;
 }
-
 #pragma endregion
 
 #pragma region Server 
-bool System::SRV_loadIpAddressInto( byte target[4] )
-{
-	//TODO: Salvar o ip com os octetos na ordem correta
-	for ( int i = 3; i >= 0; i-- )
-		target[3-i] = EEPROM.read( OFFSET_SRV_IpAddress + i );
-	
-	return true;
+bool System::SRV_loadIpAddressInto( byte target[4] ) {
+	return readIpHelper( target, OFFSET_SRV_IpAddress );
 }
-uint32_t  System::SRV_getIpAddress() {
-	return getUInt32Helper(OFFSET_SRV_IpAddress);
-}
-bool System::SRV_setIpAddress(uint32_t value) {
-	return setUInt32Helper(value, OFFSET_SRV_IpAddress);
+bool System::SRV_setIpAddress( const byte value[4] ) {
+	return writeIpHelper( value, OFFSET_SRV_IpAddress );
 }
 
 uint16_t System::SRV_getPort() {
@@ -210,9 +190,8 @@ bool System::ACT_setTime(uint16_t value)
 
 #pragma region DateTime 
 bool System::DT_loadNTPIpAddressInto( byte target[4] ) {
-	//TODO: Salvar o ip com os octetos na ordem correta
-	for ( int i = 3; i >= 0; i-- )
-		target[3-i] = EEPROM.read( OFFSET_DT_NTPIpAddress + i );
+	for ( int i = 0; i < 4; i++ )
+		target[i] = EEPROM.read( OFFSET_DT_NTPIpAddress + i );
 	
 	return true;
 }
@@ -241,11 +220,24 @@ uint32_t System::DT_getNTPIpAddress()
 {
 	return getUInt32Helper(OFFSET_DT_NTPIpAddress);
 }
-bool System::DT_setNTPIpAddress(uint32_t value)
-{
-	return setUInt32Helper(value, OFFSET_DT_NTPIpAddress);
+bool System::DT_setNTPIpAddress( const byte ip[4] ) {
+	return writeIpHelper( ip, OFFSET_DT_NTPIpAddress );
 }
 #pragma endregion
+
+bool System::writeIpHelper( const byte value[4], int8_t offset ) {
+	for ( int i = 0; i < 4; i++ )
+		EEPROM.write( offset + i, value[i] );
+	
+	return true;
+}
+
+bool System::readIpHelper( byte target[4], int8_t offset ) {
+	for ( int i = 0; i < 4; i++ )
+		target[i] = EEPROM.read( offset + i );
+	
+	return true;
+}
 
 uint32_t System::getUInt32Helper( int8_t address )
 {

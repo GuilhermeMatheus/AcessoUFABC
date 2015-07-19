@@ -1,8 +1,7 @@
 #include "NetworkAccessProvider.h"
 #include "utils.h"
 
-void NetworkAccessProvider::begin()
-{
+void NetworkAccessProvider::begin() {
 	byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -14,12 +13,13 @@ void NetworkAccessProvider::begin()
 		Ethernet.begin( mac );
 	
 	else {
-		IPAddress ip(10, 0, 0, 2);
-		//IPAddress dns(10, 0, 0, 2);
-		//IPAddress gateway(10, 0, 0, 2);
+		byte ip[4], gateway[4], subnet[4], dumb[4];
+		
+		System::NW_loadIpAddressInto( ip );
+		System::NW_loadGatewayInto( gateway );
+		System::NW_loadMaskInto( subnet );
 
-		Ethernet.begin(mac, ip);
-		//Ethernet.begin(mac, ip, dns, gateway);
+		Ethernet.begin( mac, ip, dumb, gateway, subnet );
 	}
 }
 

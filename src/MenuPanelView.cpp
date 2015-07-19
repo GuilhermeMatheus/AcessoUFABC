@@ -51,7 +51,7 @@ void								okMenuAcionamentoTempo ( MenuPanelView* );
 bool								editTemplateFlag	 ( const __FlashStringHelper*, String&, String&, bool, MenuPanelView*);
 uint8_t								editTemplateUInt8	 ( const __FlashStringHelper*, uint8_t, MenuPanelView* );
 uint16_t							editTemplateUInt16	 ( const __FlashStringHelper*, uint16_t, MenuPanelView* );
-uint32_t							editTemplateIP		 ( const __FlashStringHelper*, uint32_t, MenuPanelView* );
+uint32_t							editTemplateIP		 ( const __FlashStringHelper*, byte[4], MenuPanelView* );
 DateTime							editTemplateDateTime ( const __FlashStringHelper*, DateTime, MenuPanelView* );
 uint32_t							editTemplateUInt32	 ( const __FlashStringHelper*, uint32_t, MenuPanelView* );
 uint32_t							editTemplatePassword ( const __FlashStringHelper*, MenuPanelView *);
@@ -307,10 +307,12 @@ void okMenuDataHoraServidorNTP( MenuPanelView *mpv ) {
 		return;
 	}
 	
-	uint32_t ip = System::DT_getNTPIpAddress();
-	uint32_t newIp = editTemplateIP( F( "IP Servidor NTP:" ), ip, mpv );
+	byte ntpIp[4];
+	System::DT_loadNTPIpAddressInto( ntpIp );
+	bool ipChanged = editTemplateIP( F( "IP Servidor NTP:" ), ntpIp, mpv ) > 0;
 
-	System::DT_setNTPIpAddress( newIp );
+	if ( ipChanged )
+		System::DT_setNTPIpAddress( ntpIp );
 	
 	mpv->lcd->clear();
 	mpv->lcd->print( F( " Conectando..." ) );
@@ -353,34 +355,40 @@ void okMenuRedeEnderecoIP( MenuPanelView *mpv ) {
 	if ( checkDHCP( mpv ) )
 		return;
 
-	uint32_t ip = System::NW_getIpAddress();
-	uint32_t newIp = editTemplateIP( F( "IP de Rede:" ), ip, mpv );
+	byte networkIp[4];
+	System::NW_loadIpAddressInto( networkIp );
+	bool ipChanged = editTemplateIP( F( "IP de Rede:" ), networkIp, mpv ) > 0;
 
-	System::NW_setIpAddress( newIp );
+	if ( ipChanged )
+		System::NW_setIpAddress( networkIp );
 }
 void okMenuRedeMascara( MenuPanelView *mpv ) {
 	if ( checkDHCP( mpv ) )
 		return;
 
-	uint32_t mask = System::NW_getMask();
-	uint32_t newMask = editTemplateIP( F( "Mascara de Rede:" ), mask, mpv );
+	byte mask[4];
+	System::NW_loadMaskInto( mask );
+	bool ipChanged = editTemplateIP( F( "Mascara de Rede:" ), mask, mpv ) > 0;
 	
-	System::NW_setMask( newMask );
+	if ( ipChanged )
+		System::NW_setMask( mask );
 }
 void okMenuRedeGateway( MenuPanelView *mpv ) {
 	if ( checkDHCP( mpv ) )
 		return;
 
-	uint32_t gateway = System::NW_getGateway();
-	uint32_t newGateway = editTemplateIP( F( "Gateway:" ), gateway, mpv );
+	byte gateway[4];
+	System::NW_loadGatewayInto( gateway );
+	bool ipChanged = editTemplateIP( F( "Gateway:" ), gateway, mpv ) > 0;
 	
-	System::NW_setGateway( newGateway );
+	if ( ipChanged )
+		System::NW_setGateway( gateway );
 }
 void okMenuRedeNumeroTerminal( MenuPanelView *mpv ) {
-	uint8_t terminal = System::NW_getGateway();
+	uint8_t terminal = System::NW_getTerminalNumber();
 	uint8_t newTerminal = editTemplateUInt8( F( "Numero terminal:" ), terminal, mpv );
 	
-	System::NW_setGateway( newTerminal );
+	System::NW_setTerminalNumber( newTerminal );
 }
 
 bool checkDHCP( MenuPanelView *mpv ) {
@@ -401,10 +409,12 @@ bool checkDHCP( MenuPanelView *mpv ) {
 
 #pragma region ServerMenu
 void okMenuServidorEnderecoIP( MenuPanelView *mpv ) {
-	uint32_t ip = System::SRV_getIpAddress();
-	uint32_t newIp = editTemplateIP( F( "IP do Servidor:" ), ip, mpv );
+	byte serverIp[4];
+	System::SRV_loadIpAddressInto( serverIp );
+	bool ipChanged = editTemplateIP( F( "IP do Servidor:" ), serverIp, mpv ) > 0;
 
-	System::SRV_setIpAddress( newIp );
+	if ( ipChanged )
+		System::SRV_setIpAddress( serverIp );
 }
 void okMenuServidorPorta( MenuPanelView *mpv ) {
 	uint16_t port = System::SRV_getPort();
@@ -572,12 +582,12 @@ uint16_t editTemplateUInt16( const __FlashStringHelper *editorDisplay, uint16_t 
 	return ( uint16_t )result;
 }
 
-uint32_t editTemplateIP( const __FlashStringHelper * editorDisplay, uint32_t current, MenuPanelView *mpv ) {
-	uint32_t ip[4] = {
-		( current >> 24 ),
-		( current & 0x00FF0000 ) >> 16,
-		( current & 0x0000FF00 ) >> 8,
-		( current & 0x000000FF )
+uint32_t editTemplateIP( const __FlashStringHelper * editorDisplay, byte current[4], MenuPanelView *mpv ) {
+	uint16_t ip[4] = {
+		current[0],
+		current[1],
+		current[2],
+		current[3]
 	};
 
 	mpv->lcd->clear();
@@ -610,7 +620,7 @@ uint32_t editTemplateIP( const __FlashStringHelper * editorDisplay, uint32_t cur
 				newValue = mpv->keyPadListener->WaitForInput();
 				if ( newValue == '#' ) {
 					mpv->lcd->cursor_off();
-					return current;
+					return -1;
 				}
 			} while ( newValue < '0' || newValue > '9' );
 
@@ -627,7 +637,10 @@ uint32_t editTemplateIP( const __FlashStringHelper * editorDisplay, uint32_t cur
 	}
 	mpv->lcd->cursor_off();
 
-	return ( uint32_t )( ( ip[0] << 24 ) | ( ip[1] << 16 ) | ( ip[2] << 8 ) | ip[3] );
+	for (int i = 0; i < 4; i++)
+		current[i] = ip[i];
+
+	return 1;
 }
 
 DateTime editTemplateDateTime( const __FlashStringHelper * editorDisplay, DateTime current, MenuPanelView *mpv )
