@@ -5,6 +5,8 @@
 #include <Wire.h>
 #include <MFRC522.h>
 #include <Ethernet.h>
+#include <EthernetUdp.h>
+#include <Time.h>
 
 #include "utils.h"
 #include "System.h"
@@ -101,17 +103,19 @@ void setup() {
 	
 	NetworkAccessProvider::begin();
 
-	root::_reader =						new MFRC522 ( 2,				//select pin
-													  9 );				//reset power down pin
+	root::_reader =						new MFRC522 ( 3,				//select pin
+													  4 );				//reset power down pin
 	root::_reader->PCD_Init();
 
 	root::_mifareIdProvider =			new MifareIDProvider( root::_reader );
-	root::_keyPadListener =				new KeyPadListener ( A0, A1, A2 );
+	root::_keyPadListener =				new KeyPadListener ( A3, A4, A5 );
 
 	root::_rtc =						new RTC_DS1307 ();
 	root::_rtc->begin();
 
-	root::_ntpDateTimeProvider =		new NTPDateTimeProvider();
+	EthernetUDP *udp =					new EthernetUDP();
+	root::_ntpDateTimeProvider =		new NTPDateTimeProvider( udp );
+
 	root::_rtcDateTimeProvider =		new RTCDateTimeProvider ( root::_rtc );
 	root::_idleView =					new IdleView ( root::_lcd, root::_rtcDateTimeProvider );
 	root::_eepromAccessRegWriter =		new EepromAccessRegWriter ();

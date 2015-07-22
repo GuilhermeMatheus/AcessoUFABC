@@ -10,3 +10,5 @@ Confirmar com o RODRIGO o que fazer com a sobrecarga do ethernet.begin() que ped
 -No setup, limpar a área de RegisterReg
 
 -Fazer uso do servidor NTP;
+
+-Atualizar o Esquemático do rfid (2 e 4);

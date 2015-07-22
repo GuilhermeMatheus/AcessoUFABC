@@ -9,18 +9,26 @@ void NetworkAccessProvider::begin() {
 	_LOG("AVR_ATmega");
 #endif
 
-	if ( System::NW_getIsDHCP() )
+	if ( System::NW_getIsDHCP() ){
 		Ethernet.begin( mac );
 	
-	else {
-		byte ip[4], gateway[4], subnet[4], dumb[4];
-		
-		System::NW_loadIpAddressInto( ip );
-		System::NW_loadGatewayInto( gateway );
-		System::NW_loadMaskInto( subnet );
+#ifdef DEBUG
+		Serial.print("My IP address: ");
+		for (byte thisByte = 0; thisByte < 4; thisByte++) {
+			Serial.print(Ethernet.localIP()[thisByte], DEC);
+			Serial.print(".");
+		}
+#endif
+	 }
+	 else {
+		 byte ip[4], gateway[4], subnet[4];
+		 
+		 System::NW_loadIpAddressInto( ip );
+		 System::NW_loadGatewayInto( gateway );
+		 System::NW_loadMaskInto( subnet );
 
-		Ethernet.begin( mac, ip, dumb, gateway, subnet );
-	}
+		 Ethernet.begin( mac, ip, gateway, gateway, subnet );
+	 }
 }
 
 NetworkAccessProvider::NetworkAccessProvider( String( *converter )( byte[] ), AccessProvider *connectionFallbackProvider )
