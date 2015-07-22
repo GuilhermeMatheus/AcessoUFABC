@@ -21,6 +21,7 @@ public:
 	int						Write( const AccessReg value );
 	int						Delete( const byte code[4] );
 	int						Get( const byte code[4], AccessReg &target );
+	bool					Clear();
 	
 	~EepromAccessRegWriter();
 };

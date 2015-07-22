@@ -47,6 +47,17 @@ int EepromAccessRegWriter::Get( const byte code[4], AccessReg &target ) {
 	return 1;
 }
 
+bool EepromAccessRegWriter::Clear() {
+	//O acesso a memória EEPROM dos microcontroladores avr atmega é custoso
+	//em relação ao desempenho e seu ciclo de vida. Por este motivo, apenas
+	//a região destinada aos códigos são limpos e não o registro inteiro.
+
+	for ( int i = OFFSET_ACS_Regs; i < MAX_EEPROM_SIZE; i += PACK_REG_SIZE ) 
+		for ( int j = i; j < i + 4; j++ )
+			if ( EEPROM.read( j ) != 0xFF )
+				EEPROM.write( j, 0xFF );
+}
+
 int EepromAccessRegWriter::findSlot( const byte code[4] ) {
 	for ( int i = OFFSET_ACS_Regs; i < MAX_EEPROM_SIZE; i += PACK_REG_SIZE ) {
 		bool found = true;

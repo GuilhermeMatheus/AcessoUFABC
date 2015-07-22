@@ -404,6 +404,27 @@ DateTime settings.
 	static bool				DT_setNTPIpAddress( const byte ip[4] );
 #pragma endregion
 
+	/**
+	* Verifica se o terminal já foi configurado.
+	* 
+	* @return True quando o terminal estiver configurado ou, caso contrário, False.
+	*/
+	static bool				GetIsSetup();
+
+	/**
+	* Define o estado do terminal como configurado.
+	* 
+	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
+	*/
+	static bool				SetIsSetup();
+
+	/**
+	* Limpa todos os registros de acesso gravados em memória cache do terminal.
+	* 
+	* @return True quando o cache for limpo com sucesso ou, caso contrário, False.
+	*/
+	static bool				ClearRegistersCache();
+
 private:
 
 	static void				CloseGate();

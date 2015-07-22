@@ -209,10 +209,7 @@ void System::OpenGate() {
 
 #pragma region DateTime 
 bool System::DT_loadNTPIpAddressInto( byte target[4] ) {
-	for ( int i = 0; i < 4; i++ )
-		target[i] = EEPROM.read( OFFSET_DT_NTPIpAddress + i );
-	
-	return true;
+	return readIpHelper( target, OFFSET_DT_NTPIpAddress );
 }
 DateTime System::DT_getDateTime(RTC_DS1307 * rtc)
 {
@@ -243,6 +240,21 @@ bool System::DT_setNTPIpAddress( const byte ip[4] ) {
 	return writeIpHelper( ip, OFFSET_DT_NTPIpAddress );
 }
 #pragma endregion
+
+bool System::GetIsSetup()
+{
+	return EEPROM.read(OFFSET_SETUP) == 1;
+}
+bool System::SetIsSetup()
+{
+	EEPROM.write(OFFSET_SETUP, 1 );
+	return true;
+}
+
+bool System::ClearRegistersCache() {
+	return System::accessWriter->Clear();
+}
+
 
 bool System::writeIpHelper( const byte value[4], int8_t offset ) {
 	for ( int i = 0; i < 4; i++ )

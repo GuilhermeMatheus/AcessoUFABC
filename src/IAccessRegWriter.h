@@ -40,6 +40,11 @@ public:
 	*/
 	virtual int				Get( const byte code[4], AccessReg &target ) = 0;
 
+	/*
+	* Deleta todos os registros associados a esta instância.
+	*/ 
+	virtual bool			Clear() = 0;
+
 	virtual					~IAccessRegWriter()	{ }
 };
 

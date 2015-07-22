@@ -65,7 +65,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\mega;C:\Users\Guilherme\Documents\GitHub\AcessoUFABC\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\libraries\Ethernet\src;C:\Program Files (x86)\Arduino\libraries\Ethernet\src\utility;C:\Users\Guilherme\Documents\Arduino\libraries\LiquidCrystal_I2C;C:\Users\Guilherme\Documents\Arduino\libraries\LiquidCrystal_I2C\utility;C:\Users\Guilherme\Documents\Arduino\libraries\rfid;C:\Users\Guilherme\Documents\Arduino\libraries\rfid\utility;C:\Users\Guilherme\Documents\Arduino\libraries\RTClib;C:\Users\Guilherme\Documents\Arduino\libraries\RTClib\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\default\debuggers;C:\Users\Guilherme\Documents\Arduino\libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino;C:\Program Files (x86)\Arduino\hardware\arduino\avr\variants\mega;C:\Users\Guilherme\Documents\GitHub\AcessoUFABC\src;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\EEPROM\utility;C:\Program Files (x86)\Arduino\libraries\Ethernet\src;C:\Program Files (x86)\Arduino\libraries\Ethernet\src\utility;C:\Users\Guilherme\Documents\Arduino\libraries\LiquidCrystal_I2C;C:\Users\Guilherme\Documents\Arduino\libraries\LiquidCrystal_I2C\utility;C:\Users\Guilherme\Documents\Arduino\libraries\rfid;C:\Users\Guilherme\Documents\Arduino\libraries\rfid\utility;C:\Users\Guilherme\Documents\Arduino\libraries\RTClib;C:\Users\Guilherme\Documents\Arduino\libraries\RTClib\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\SPI\utility;C:\Users\Guilherme\Documents\Arduino\libraries\Time;C:\Users\Guilherme\Documents\Arduino\libraries\Time\utility;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\utility;C:\Program Files (x86)\Arduino\libraries;C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries;C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\default\debuggers;C:\Users\Guilherme\Documents\Arduino\libraries;{runtime.tools.avr-gcc.path}/avr/include/;{runtime.tools.avr-gcc.path}//avr/include/avr/;{runtime.tools.avr-gcc.path}/lib\gcc\avr\4.8.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>C:\Users\Guilherme\Documents\GitHub\AcessoUFABC\src\Visual Micro\.src.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClInclude Include="AccessProvider.h" />
     <ClInclude Include="AccessReg.h" />
+    <ClInclude Include="AT24C256RegWriter.h" />
     <ClInclude Include="EepromAccessProvider.h" />
     <ClInclude Include="EepromAccessRegWriter.h" />
     <ClInclude Include="GuardianKeeper.h" />
@@ -108,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AccessRegUtils.cpp" />
+    <ClCompile Include="AT24C256RegWriter.cpp" />
     <ClCompile Include="EepromAccessProvider.cpp" />
     <ClCompile Include="EepromAccessRegWriter.cpp" />
     <ClCompile Include="GuardianKeeper.cpp" />

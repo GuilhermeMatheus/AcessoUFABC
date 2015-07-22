@@ -120,6 +120,9 @@
     <ClInclude Include="IMifareIDProvider.h">
       <Filter>Header Files\IIDProvider</Filter>
     </ClInclude>
+    <ClInclude Include="AT24C256RegWriter.h">
+      <Filter>Header Files\IAccessRegWriter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyPadListener.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="NTPDateTimeProvider.cpp">
       <Filter>Source Files\DateTime</Filter>
+    </ClCompile>
+    <ClCompile Include="AT24C256RegWriter.cpp">
+      <Filter>Source Files\IAccessRegWriter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
