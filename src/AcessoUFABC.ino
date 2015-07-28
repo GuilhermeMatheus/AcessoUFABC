@@ -135,6 +135,8 @@ void setup() {
 	if ( System::DT_getUseNTP() )
 		root::checkNtpServer( false );
 
+	root::_menuConfiguration->RunSetupIfNeeded();
+
 	root::_idleView->ViewChanged();
 }
 

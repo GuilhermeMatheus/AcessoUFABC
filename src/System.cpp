@@ -251,7 +251,10 @@ bool System::SetIsSetup()
 	return true;
 }
 
-bool System::ClearRegistersCache() {
+bool System::Reset() {
+	for ( int i = OFFSET_ACS_Password; i < OFFSET_ACS_Regs; i++ )
+		EEPROM.write( i, 0x0 );
+
 	return System::accessWriter->Clear();
 }
 

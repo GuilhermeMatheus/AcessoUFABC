@@ -942,4 +942,19 @@ bool MenuPanelView::HasNewFrame() {
 	return false;
 }
 
+void MenuPanelView::RunSetupIfNeeded() {
+	if (System::GetIsSetup())
+		return;
+
+	//Limpamos qualquer sujeira que esteja na memória
+	System::Reset();
+
+	okMenuAcessoAlterarSenha(this);
+	okMenuDataHoraAjustarData(this);
+	okMenuRedeNumeroTerminal(this);
+	okMenuServidorEnderecoIP(this);
+
+	System::SetIsSetup();
+}
+
 MenuPanelView::~MenuPanelView() { }

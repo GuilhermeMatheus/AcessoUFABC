@@ -77,6 +77,17 @@ public:
 	*/
 	bool							CheckPassword();
 
+	/**
+	* Verifica em System::GetIsSetup() se o terminal já foi configurado pela primeira vez e executa o Setup
+	* para o usuário configurar as propriedades básicas: 
+	*		-Senha;
+	*		-Data e Hora;
+	*		-Número do Terminal;
+	*		-IP de servidor.
+	* Após isto, invoca  System::ClearRegs() para limpar qualquer sujeira que possa vir na memória.
+	*/
+	void							RunSetupIfNeeded();
+
 	~MenuPanelView();
 };
 

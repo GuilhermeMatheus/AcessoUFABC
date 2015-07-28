@@ -1,14 +1,10 @@
-Confirmar com o RODRIGO se o System::FreeGate() está correto e depurar o MOSFET
-Confirmar com o RODRIGO o que fazer com a sobrecarga do ethernet.begin() que pede DNS
-
+-Arrumar NTP;
 -Usar memória externa
-
 -Reservar endereço na memória para guardar Flag de setup concluído ou não
 
 -Definir método de SETUP para quando o sistema for inicializado pela primeira vez;
-
 -No setup, limpar a área de RegisterReg
 
--Fazer uso do servidor NTP;
-
--Atualizar o Esquemático do rfid (2 e 4);
+Para o futuro:
+- configurar NTP para tcp ou udp (agora só tem udp)
+- colocar timeout para o DHCP (não pode bloquear no boot)

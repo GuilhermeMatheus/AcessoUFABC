@@ -15,6 +15,7 @@
 #define MAX_EEPROM_SIZE		  1024
 #endif
 
+//Deve ser sempre o primeiro índice da memória EEPROM (Por conta do System::Reset())
 #define OFFSET_ACS_Password		  0
 #define OFFSET_NW_IsDHCP		  4
 #define OFFSET_NW_IpAddress		  5
@@ -29,6 +30,7 @@
 #define OFFSET_SRV_Computer		 31
 #define OFFSET_NW_TerminalNumber 32
 #define OFFSET_SETUP			 33
+//Deve ser sempre o último endereço usado na memória EEPROM (Por conta do System::Reset())
 #define OFFSET_ACS_Regs			 34
 
 #define LED_RED_PIN				 8
@@ -419,11 +421,11 @@ DateTime settings.
 	static bool				SetIsSetup();
 
 	/**
-	* Limpa todos os registros de acesso gravados em memória cache do terminal.
+	* Zera todas as configurações do terminal e limpa todos os registros de acesso gravados.
 	* 
-	* @return True quando o cache for limpo com sucesso ou, caso contrário, False.
+	* @return True quando o Reset for realizado com sucesso ou, caso contrário, False.
 	*/
-	static bool				ClearRegistersCache();
+	static bool				Reset();
 
 private:
 
