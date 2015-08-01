@@ -8,6 +8,11 @@ GuardianKeeper::GuardianKeeper( AccessProvider *accessProvider, LiquidCrystal_I2
 GuardianKeeper::~GuardianKeeper() { }
 
 int GuardianKeeper::AllowAccess( byte cardId[] ) {
+	lcd->clear();
+	lcd->print( F("   Contatando") );
+	lcd->setCursor( 0, 1 );
+	lcd->print( F("   servidor...") );
+
 	AccessAttemptResult result = accessProvider->AllowAccess( cardId );
 
 	lcd->clear();

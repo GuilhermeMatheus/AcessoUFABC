@@ -29,6 +29,7 @@ void								okMenuAcessoAdicionarCartao ( MenuPanelView* );
 void								okMenuAcessoRevogarCartao	( MenuPanelView* );
 void								okMenuAcessoAdicionarMestre	( MenuPanelView* );
 void								okMenuAcessoAlterarSenha	( MenuPanelView* );
+void								AlterarSenha				( MenuPanelView*, bool );
 
 void								okMenuDataHoraAjustarData ( MenuPanelView* );
 void								okMenuDataHoraServidorNTP ( MenuPanelView* );
@@ -230,8 +231,11 @@ void okMenuAcessoAdicionarMestre( MenuPanelView *mpv ) {
 
 	delay( 2000 );
 }
-void okMenuAcessoAlterarSenha( MenuPanelView *mpv ) {
-	bool isActualPasswordCorrect = mpv->CheckPassword();
+void okMenuAcessoAlterarSenha(MenuPanelView *mpv) {
+	AlterarSenha( mpv, false );
+}
+void AlterarSenha( MenuPanelView *mpv, bool forceNewPassword ) {
+	bool isActualPasswordCorrect = forceNewPassword || mpv->CheckPassword();
 	mpv->lcd->clear();
 	
 	if ( !isActualPasswordCorrect ) {
@@ -243,26 +247,37 @@ void okMenuAcessoAlterarSenha( MenuPanelView *mpv ) {
 		return;
 	}
 
-	uint32_t newPassword = editTemplatePassword( F( "Nova senha:" ), mpv );
-	if ( newPassword == INVALID_PASSWORD ) {
-		mpv->lcd->print( F ( " Senha invalida" ) );
+	uint32_t newPassword = INVALID_PASSWORD;
+	while (true) {
+		newPassword = editTemplatePassword( F( "Nova senha:" ), mpv );
+		
+		while ( newPassword == INVALID_PASSWORD ) {
+			mpv->lcd->print( F( " Senha invalida" ) );
+			System::NOTIFY_ERROR();
+		
+			if ( forceNewPassword )
+				newPassword = editTemplatePassword( F( "Nova senha:" ), mpv );
+			else
+				return;
+		}
 
-		System::NOTIFY_ERROR();
-		return;
-	}
+		mpv->lcd->clear();
 
-	mpv->lcd->clear();
-
-	uint32_t newPasswordAgain = editTemplatePassword( F( "Repita nva senha" ), mpv );
-	mpv->lcd->clear();
+		uint32_t newPasswordAgain = editTemplatePassword( F( "Repita nva senha" ), mpv );
+		mpv->lcd->clear();
 	
-	if ( newPassword != newPasswordAgain ) {
-		mpv->lcd->print( F( "     Senhas" ) );
-		mpv->lcd->setCursor( 0, 1 );
-		mpv->lcd->print( F( "   Diferentes" ) );
+		if ( newPassword != newPasswordAgain ) {
+			mpv->lcd->print( F( "     Senhas" ) );
+			mpv->lcd->setCursor( 0, 1 );
+			mpv->lcd->print( F( "   Diferentes" ) );
 
-		System::NOTIFY_ERROR();
-		return;
+			System::NOTIFY_ERROR();
+		
+			if (!forceNewPassword)
+				return;
+		}
+		else
+			break;
 	}
 	
 	System::ACS_SetPassword( newPassword );
@@ -900,7 +915,7 @@ bool MenuPanelView::CheckPassword() {
 }
 
 void MenuPanelView::Active() {
-	bool hasMenuAccess = CheckPassword();
+	bool hasMenuAccess = true; // CheckPassword();
 
 	if ( hasMenuAccess ) {
 		gotoRootMenu();
@@ -949,10 +964,21 @@ void MenuPanelView::RunSetupIfNeeded() {
 	//Limpamos qualquer sujeira que esteja na memória
 	System::Reset();
 
-	okMenuAcessoAlterarSenha(this);
+	AlterarSenha( this, true );
+
 	okMenuDataHoraAjustarData(this);
 	okMenuRedeNumeroTerminal(this);
 	okMenuServidorEnderecoIP(this);
+	okMenuServidorPorta(this);
+
+	okMenuRedeDHCP(this);
+	if ( !System::NW_getIsDHCP() ) {
+		okMenuRedeMascara(this);
+		okMenuRedeEnderecoIP(this);
+	}
+
+	okMenuAcionamentoTipo(this);
+	okMenuAcionamentoTempo(this);
 
 	System::SetIsSetup();
 }

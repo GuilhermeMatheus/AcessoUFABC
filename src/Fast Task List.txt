@@ -1,12 +1,5 @@
--Arrumar NTP;
--Usar memória externa
-
--Definir método de SETUP para quando o sistema for inicializado pela primeira vez (Testar);
-	-Setup já está zuado na senha;
-	-Colocar porta do servidor no setup;
-	-Colocar Número do computador no setup;
-	-Colocar DHCP ou Ip e Máscara no setup;
-	-Colocar configurações de acionador no setup;
+-Arrumar NTP -- Muito intermitente...
+-Arranjar uma forma de resetar o shield ethernet após o setup;
 
 Para o futuro:
 - Configurar NTP para tcp ou udp (agora só tem udp)
