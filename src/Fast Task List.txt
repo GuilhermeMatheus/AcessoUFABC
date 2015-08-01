@@ -1,10 +1,13 @@
 -Arrumar NTP;
 -Usar memória externa
--Reservar endereço na memória para guardar Flag de setup concluído ou não
 
--Definir método de SETUP para quando o sistema for inicializado pela primeira vez;
--No setup, limpar a área de RegisterReg
+-Definir método de SETUP para quando o sistema for inicializado pela primeira vez (Testar);
+	-Setup já está zuado na senha;
+	-Colocar porta do servidor no setup;
+	-Colocar Número do computador no setup;
+	-Colocar DHCP ou Ip e Máscara no setup;
+	-Colocar configurações de acionador no setup;
 
 Para o futuro:
-- configurar NTP para tcp ou udp (agora só tem udp)
-- colocar timeout para o DHCP (não pode bloquear no boot)
+- Configurar NTP para tcp ou udp (agora só tem udp)
+- Colocar timeout para o DHCP (não pode bloquear no boot)

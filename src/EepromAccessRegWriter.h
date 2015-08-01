@@ -13,10 +13,11 @@ class EepromAccessRegWriter :
 	public IAccessRegWriter {
 
 private:
+	IAccessRegWriter		*fallback;
 	int						findSlot( const byte code[4] );
 
 public:
-	EepromAccessRegWriter();
+	EepromAccessRegWriter( IAccessRegWriter *fallback );
 
 	int						Write( const AccessReg value );
 	int						Delete( const byte code[4] );

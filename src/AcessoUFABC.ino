@@ -21,6 +21,7 @@
 #include "EepromAccessProvider.h"
 #include "NetworkAccessProvider.h"
 #include "GuardianKeeper.h"
+#include "AT24C256RegWriter.h"
 
 namespace root {
 	KeyPadListener						*_keyPadListener;
@@ -98,8 +99,9 @@ void setup() {
 	Wire.begin();
 	SPI.begin();
 
-	IAccessRegWriter *earw =			new EepromAccessRegWriter();
-	System::begin( earw );
+	AT24C256RegWriter *externalWriter = new	AT24C256RegWriter(0x50);	//device address
+	root::_eepromAccessRegWriter =		new EepromAccessRegWriter ( externalWriter );
+	System::begin( root::_eepromAccessRegWriter );
 	
 	NetworkAccessProvider::begin();
 
@@ -118,7 +120,6 @@ void setup() {
 
 	root::_rtcDateTimeProvider =		new RTCDateTimeProvider ( root::_rtc );
 	root::_idleView =					new IdleView ( root::_lcd, root::_rtcDateTimeProvider );
-	root::_eepromAccessRegWriter =		new EepromAccessRegWriter ();
 
 
 	root::_menuConfiguration =			new MenuPanelView ( root::_lcd, 

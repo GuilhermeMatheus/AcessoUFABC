@@ -1,6 +1,8 @@
 #include "EepromAccessRegWriter.h"
 
-EepromAccessRegWriter::EepromAccessRegWriter() { }
+EepromAccessRegWriter::EepromAccessRegWriter( IAccessRegWriter *fallback ) {
+	this->fallback = fallback;
+}
 
 int EepromAccessRegWriter::Write( AccessReg value ) {
 	_LOG( "on write" );
@@ -9,7 +11,7 @@ int EepromAccessRegWriter::Write( AccessReg value ) {
 	int eaddr = findSlot( emptyCode );
 	
 	if ( eaddr < 0 )
-		return eaddr;
+		return fallback->Write(value);
 
 	byte buffer[ PACK_REG_SIZE ];
 	AccessRegUtils::AccessReg_pack( value, buffer );
@@ -25,7 +27,7 @@ int EepromAccessRegWriter::Delete( const byte code[4] ) {
 	int eaddr = findSlot( code );
 
 	if ( eaddr < 0 )
-		return eaddr;
+		return fallback->Delete( code );
 
 	for ( int i = 0; i < 4; i++ )
 		EEPROM.write( eaddr++, 0xFF );
@@ -37,7 +39,7 @@ int EepromAccessRegWriter::Get( const byte code[4], AccessReg &target ) {
 	int addr = findSlot( code );
 
 	if ( addr < 0 )
-		return -1;
+		return fallback->Get( code, target );
 
 	byte buffer[ PACK_REG_SIZE ];
 	for (int i = 0; i < PACK_REG_SIZE; i++)
@@ -56,6 +58,8 @@ bool EepromAccessRegWriter::Clear() {
 		for ( int j = i; j < i + 4; j++ )
 			if ( EEPROM.read( j ) != 0xFF )
 				EEPROM.write( j, 0xFF );
+
+	return fallback->Clear();
 }
 
 int EepromAccessRegWriter::findSlot( const byte code[4] ) {
