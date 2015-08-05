@@ -31,10 +31,6 @@ public:
 	*/
 	NetworkAccessProvider( String ( *converter ) ( byte[] ), AccessProvider *connectionFallbackProvider );
 
-	/**
-	* Inicializa os componentes de rede da controladora.
-	*/
-	static void						begin();
 	AccessAttemptResult				AllowAccess( byte code[] );
 
 	~NetworkAccessProvider();

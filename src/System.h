@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <RTClib.h>
 #include <EEPROM.h>
+#include <Ethernet.h>
 
 #include "utils.h"
 #include "AccessReg.h"
@@ -30,8 +31,10 @@
 #define OFFSET_SRV_Computer		 31
 #define OFFSET_NW_TerminalNumber 32
 #define OFFSET_SETUP			 33
+#define OFFSET_DT_DaylightSaving 34
+#define OFFSET_DT_TimeZone		 35
 //Deve ser sempre o último endereço usado na memória EEPROM (Por conta do System::Reset())
-#define OFFSET_ACS_Regs			 34
+#define OFFSET_ACS_Regs			 36
 
 #define LED_RED_PIN				 8
 #define GATE_PIN				 6
@@ -390,6 +393,30 @@ DateTime settings.
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
 	static bool				DT_setUseNTP( bool value );
+
+	/**
+	* Acessa o flag de cálculo do horário de verão automático.
+	* 
+	* @return True quando o cálculo de horário de verão for automático, caso contrário, False.
+	*/
+	static bool				DT_getAutoDaylightSaving();
+	/**
+	* Sobrescreve o flag Acessa o flag de cálculo do horário de verão automático.
+	* 
+	* @param value O novo flag a ser salvo na controladora.
+	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
+	*/
+	static bool				DT_setAutoDaylightSaving( bool value );
+
+	/**
+	* UNDONE doc
+	*/
+	static uint8_t			DT_getTimeZone();
+	/**
+	* UNDONE doc
+	*/
+	static bool				DT_setTimeZone( uint8_t value );
+
 	
 	/**
 	* Acessa o endereço IP do servidor NTP usado pela controladora.

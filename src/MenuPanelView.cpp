@@ -32,6 +32,8 @@ void								okMenuAcessoAlterarSenha	( MenuPanelView* );
 void								AlterarSenha				( MenuPanelView*, bool );
 
 void								okMenuDataHoraAjustarData ( MenuPanelView* );
+void								okMenuDataHoraHorarioVerao( MenuPanelView* );
+void								okMenuDataHoraFusoHorario ( MenuPanelView* );
 void								okMenuDataHoraServidorNTP ( MenuPanelView* );
 void								okMenuDataHoraUsarNTP	  ( MenuPanelView* );
 
@@ -49,14 +51,15 @@ void								okMenuServidorComputador ( MenuPanelView* );
 void								okMenuAcionamentoTipo  ( MenuPanelView* );
 void								okMenuAcionamentoTempo ( MenuPanelView* );
 
-bool								editTemplateFlag	 ( const __FlashStringHelper*, String&, String&, bool, MenuPanelView*);
-uint8_t								editTemplateUInt8	 ( const __FlashStringHelper*, uint8_t, MenuPanelView* );
-uint16_t							editTemplateUInt16	 ( const __FlashStringHelper*, uint16_t, MenuPanelView* );
-uint32_t							editTemplateIP		 ( const __FlashStringHelper*, byte[4], MenuPanelView* );
-DateTime							editTemplateDateTime ( const __FlashStringHelper*, DateTime, MenuPanelView* );
-uint32_t							editTemplateUInt32	 ( const __FlashStringHelper*, uint32_t, MenuPanelView* );
-uint32_t							editTemplatePassword ( const __FlashStringHelper*, MenuPanelView *);
-int									editTemplateMfrID	 ( byte&, MenuPanelView*);
+bool								editTemplateFlag	  ( const __FlashStringHelper*, String&, String&, bool, MenuPanelView* );
+uint8_t								editTemplateOptionList( const __FlashStringHelper *[], int , uint8_t , MenuPanelView* );
+uint8_t								editTemplateUInt8	  ( const __FlashStringHelper*, uint8_t, MenuPanelView* );
+uint16_t							editTemplateUInt16	  ( const __FlashStringHelper*, uint16_t, MenuPanelView* );
+uint32_t							editTemplateIP		  ( const __FlashStringHelper*, byte[4], MenuPanelView* );
+DateTime							editTemplateDateTime  ( const __FlashStringHelper*, DateTime, MenuPanelView* );
+uint32_t							editTemplateUInt32	  ( const __FlashStringHelper*, uint32_t, MenuPanelView* );
+uint32_t							editTemplatePassword  ( const __FlashStringHelper*, MenuPanelView* );
+int									editTemplateMfrID	  ( byte&, MenuPanelView* );
 #pragma endregion
 
 #pragma region MenuOption Array Assignments
@@ -69,6 +72,8 @@ MenuOption innerMenuAcesso[] = {
 
 MenuOption innerMenuDataHora[] = {
 	{ "Ajustar Data",				okMenuDataHoraAjustarData,				gotoRootMenu }, 
+	{ "Horario de Verao",			okMenuDataHoraHorarioVerao,				gotoRootMenu }, 
+	{ "Fuso horario",				okMenuDataHoraFusoHorario,				gotoRootMenu }, 
 	{ "Usar NTP",					okMenuDataHoraUsarNTP,					gotoRootMenu },
 	{ "Servidor NTP",				okMenuDataHoraServidorNTP,				gotoRootMenu }  
 };														  
@@ -106,7 +111,7 @@ void gotoAcesso( MenuPanelView *mpv ) {
 	setActivatedMenuOption( innerMenuAcesso, 4 );
 }
 void gotoDataHora( MenuPanelView *mpv ) {
-	setActivatedMenuOption( innerMenuDataHora, 3 );
+	setActivatedMenuOption( innerMenuDataHora, 5 );
 }
 void gotoRede( MenuPanelView *mpv ) {
 	setActivatedMenuOption( innerMenuRede, 5 );
@@ -309,6 +314,35 @@ void okMenuDataHoraAjustarData( MenuPanelView *mpv ) {
 	
 	System::DT_setDateTime( newdateTime, mpv->rtc );
 }
+void okMenuDataHoraHorarioVerao( MenuPanelView *mpv ) {
+	bool ntpFlag = System::DT_getAutoDaylightSaving();
+	String sSim = "Sim";
+	String sNao = "Nao";
+
+	bool newDST = editTemplateFlag( F( "Usar automatico:" ), sSim, sNao, ntpFlag, mpv );
+
+	System::DT_setAutoDaylightSaving( newDST );
+}
+void okMenuDataHoraFusoHorario( MenuPanelView *mpv ) {
+	//[ ]Noronha  UTC2
+	//[*]Brasilia UTC3
+	//[ ]Amazonia UTC4
+	//[ ]Acre     UTC5
+	
+	static const __FlashStringHelper *OPTIONS[] = {
+		F( "Noronha  UTC2" ),
+		F( "Brasilia UTC3" ),
+		F( "Amazonia UTC4" ),
+		F( "Acre     UTC5" )
+	};
+
+	int countOptions = 4;
+	uint8_t timeZone = System::DT_getTimeZone();
+
+	uint8_t newTimeZone = editTemplateOptionList( OPTIONS, countOptions, timeZone, mpv );
+	
+	System::DT_setTimeZone( newTimeZone );
+}
 void okMenuDataHoraServidorNTP( MenuPanelView *mpv ) {
 	if ( !System::DT_getUseNTP() ) {
 		mpv->lcd->clear();
@@ -344,7 +378,6 @@ void okMenuDataHoraServidorNTP( MenuPanelView *mpv ) {
 		System::NOTIFY_ERROR();
 	}
 }
-
 void okMenuDataHoraUsarNTP( MenuPanelView *mpv ) {
 	bool ntpFlag = System::DT_getUseNTP();
 	String sSim = "Sim";
@@ -464,14 +497,70 @@ void okMenuAcionamentoTempo( MenuPanelView *mpv ) {
 
 #pragma region EditorTemplates
 
-boolean editTemplateFlag( const __FlashStringHelper * editorDisplay,
+const char *bktsUnchecked = "[ ]";
+const char *bktsChecked = "[*]";
+
+#define getBkstFor(value) value ? bktsChecked : bktsUnchecked
+
+//TODO: const const T[]
+uint8_t editTemplateOptionList( const __FlashStringHelper *options[],
+								int countOptions,
+								uint8_t selectedItem,
+								MenuPanelView *mpv ) {
+	char c = '5';
+	int page = 0, focused = 0, selected = selectedItem;
+	int maxPage = ((countOptions + (countOptions % 2)) / 2) - 1;
+
+	mpv->lcd->clear();
+	mpv->lcd->cursor_on();
+
+	do {
+		switch (c) {
+		case '2':
+			if ( focused <= 0 )
+				break;
+			focused--;
+			page = focused / 2;
+			break;
+		case '8':
+			if ( focused >= countOptions-1 )
+				break;
+			focused++;
+			page = focused / 2;
+			break;
+		case '*':
+			selected = focused;
+			break;
+		default:
+			break;
+		}
+
+		int optLine1 = page * 2;
+		int optLine2 = optLine1 + 1;
+
+		mpv->lcd->setCursor( 0, 0 );
+		mpv->lcd->print( getBkstFor(optLine1 == selected) );
+		mpv->lcd->print( options[optLine1] );
+
+		if ( optLine2 < countOptions ) {
+			mpv->lcd->setCursor( 0, 1 );
+			mpv->lcd->print( getBkstFor(optLine2 == selected) );
+			mpv->lcd->print( options[optLine2] );
+		}
+
+		mpv->lcd->setCursor(1, focused % 2);
+		c = mpv->keyPadListener->WaitForInput();
+	} while ( c != '#' );
+
+	mpv->lcd->cursor_off();
+	return selected;
+}
+
+boolean editTemplateFlag( const __FlashStringHelper *editorDisplay,
 						  String& optFlagOn,
 						  String& optFlagOff,
 						  boolean current,
 						  MenuPanelView *mpv ) {
-	const __FlashStringHelper * bktsUnchecked = F( "[ ]" );
-	const __FlashStringHelper * bktsChecked = F( "[*]" );
-
 	mpv->lcd->clear();
 	mpv->lcd->print(editorDisplay);
 
@@ -495,12 +584,12 @@ boolean editTemplateFlag( const __FlashStringHelper * editorDisplay,
 
 		mpv->lcd->setCursor( ( lenDisplay - ( lenOpts +  1 + lenBrackets ) ) / 2, 1 );
 	
-		mpv->lcd->print( result? bktsChecked : bktsUnchecked );
+		mpv->lcd->print( result ? bktsChecked : bktsUnchecked );
 		mpv->lcd->print( optFlagOn );
 	
 		mpv->lcd->print( ' ' );
 
-		mpv->lcd->print( result? bktsUnchecked : bktsChecked );
+		mpv->lcd->print( result ? bktsUnchecked : bktsChecked );
 		mpv->lcd->print( optFlagOff );
 
 		c = mpv->keyPadListener->WaitForInput();
@@ -915,7 +1004,7 @@ bool MenuPanelView::CheckPassword() {
 }
 
 void MenuPanelView::Active() {
-	bool hasMenuAccess = true; // CheckPassword();
+	bool hasMenuAccess = CheckPassword();
 
 	if ( hasMenuAccess ) {
 		gotoRootMenu();

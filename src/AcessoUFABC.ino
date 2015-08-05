@@ -81,6 +81,7 @@ namespace root {
 			_idleView->ViewChanged();
 		}
 	}
+
 }
 
 void setup() {
@@ -101,22 +102,22 @@ void setup() {
 
 	AT24C256RegWriter *externalWriter = new	AT24C256RegWriter(0x50);	//device address
 	root::_eepromAccessRegWriter =		new EepromAccessRegWriter ( externalWriter );
+
 	System::begin( root::_eepromAccessRegWriter );
 	
-	NetworkAccessProvider::begin();
+	EthernetUDP *udp =					new EthernetUDP();
+	root::_ntpDateTimeProvider =		new NTPDateTimeProvider();
+
+	root::_keyPadListener =				new KeyPadListener ( A3, A4, A5 );
+	
+	root::_rtc =						new RTC_DS1307 ();
+	root::_rtc->begin();
 
 	root::_reader =						new MFRC522 ( 3,				//select pin
 													  4 );				//reset power down pin
 	root::_reader->PCD_Init();
 
 	root::_mifareIdProvider =			new MifareIDProvider( root::_reader );
-	root::_keyPadListener =				new KeyPadListener ( A3, A4, A5 );
-
-	root::_rtc =						new RTC_DS1307 ();
-	root::_rtc->begin();
-
-	EthernetUDP *udp =					new EthernetUDP();
-	root::_ntpDateTimeProvider =		new NTPDateTimeProvider( udp );
 
 	root::_rtcDateTimeProvider =		new RTCDateTimeProvider ( root::_rtc );
 	root::_idleView =					new IdleView ( root::_lcd, root::_rtcDateTimeProvider );
@@ -137,7 +138,6 @@ void setup() {
 		root::checkNtpServer( false );
 
 	root::_menuConfiguration->RunSetupIfNeeded();
-
 	root::_idleView->ViewChanged();
 }
 

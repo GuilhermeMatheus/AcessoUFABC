@@ -27,10 +27,10 @@ private:
 	bool					CheckBackoff();
 	bool					CheckConstraints();
 	bool					SetInternalTimeAndDate();
-	void					SendNTPpacket( IPAddress &address );
+	void					SendNTPpacket();
 
 public:
-	NTPDateTimeProvider( EthernetUDP *udp );
+	NTPDateTimeProvider();
 
 	bool					TryGetDateTime( DateTime &target, bool checkConstraints = true );
 	DateTime				GetDateTime();

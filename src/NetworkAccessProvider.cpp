@@ -1,36 +1,6 @@
 #include "NetworkAccessProvider.h"
 #include "utils.h"
 
-void NetworkAccessProvider::begin() {
-	byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-	pinMode(53, OUTPUT);
-	_LOG("AVR_ATmega");
-#endif
-
-	if ( System::NW_getIsDHCP() ){
-		Ethernet.begin( mac );
-	
-#ifdef DEBUG
-		Serial.print("My IP address: ");
-		for (byte thisByte = 0; thisByte < 4; thisByte++) {
-			Serial.print(Ethernet.localIP()[thisByte], DEC);
-			Serial.print(".");
-		}
-#endif
-	 }
-	 else {
-		 byte ip[4], gateway[4], subnet[4];
-		 
-		 System::NW_loadIpAddressInto( ip );
-		 System::NW_loadGatewayInto( gateway );
-		 System::NW_loadMaskInto( subnet );
-
-		 Ethernet.begin( mac, ip, gateway, gateway, subnet );
-	 }
-}
-
 NetworkAccessProvider::NetworkAccessProvider( String( *converter )( byte[] ), AccessProvider *connectionFallbackProvider )
 	: AccessProvider( converter ) {
 	this->connectionFallbackProvider = connectionFallbackProvider;

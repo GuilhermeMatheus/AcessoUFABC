@@ -11,6 +11,27 @@ void System::begin(IAccessRegWriter *accessWriter) {
 	System::accessWriter = accessWriter;
 
 	CloseGate();
+
+	byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
+
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+	pinMode(53, OUTPUT);
+	_LOG("AVR_ATmega");
+#endif
+
+	if (System::NW_getIsDHCP()){
+		Ethernet.begin(mac);
+	}
+	else {
+		byte ip[4], gateway[4], subnet[4];
+
+		System::NW_loadIpAddressInto(ip);
+		System::NW_loadGatewayInto(gateway);
+		System::NW_loadMaskInto(subnet);
+
+		Ethernet.begin(mac, ip, gateway, gateway, subnet);
+	}
+
 }
 
 #pragma warning( push )
@@ -231,6 +252,27 @@ bool System::DT_setUseNTP(bool value)
 	return true;
 }
 
+uint8_t System::DT_getTimeZone()
+{
+	return EEPROM.read( OFFSET_DT_TimeZone );
+}
+bool System::DT_setTimeZone(uint8_t value)
+{
+	EEPROM.write( OFFSET_DT_TimeZone, value );
+	return true;
+}
+
+
+bool System::DT_getAutoDaylightSaving()
+{
+	return EEPROM.read(OFFSET_DT_DaylightSaving) == 1;
+}
+bool System::DT_setAutoDaylightSaving(bool value)
+{
+	EEPROM.write(OFFSET_DT_DaylightSaving, value ? 1 : 0 );
+	return true;
+}
+
 
 uint32_t System::DT_getNTPIpAddress()
 {
@@ -257,7 +299,6 @@ bool System::Reset() {
 
 	return System::accessWriter->Clear();
 }
-
 
 bool System::writeIpHelper( const byte value[4], int8_t offset ) {
 	for ( int i = 0; i < 4; i++ )
