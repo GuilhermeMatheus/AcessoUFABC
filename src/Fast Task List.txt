@@ -1,5 +1,25 @@
--Arrumar NTP -- Muito intermitente...
+Após encontro com o Rodrigo:
+  -Arrumar o NTP (Parece que agora o único problema é ao se obter o IP da controladora);
+  
+  -Transformar horário do RTC para formato UTC:
+	^Assim, a exibição do ToString passará por uma transformação (+Fuso+DST)
+	^Quando o usuário digita o novo valor, passaremos por confersões para chegar ao UTC (-Fuso-DST)
+  
+*  -Colocar configuração de Fuso Horário
+*    ^UTC-2  Noronha
+*    ^UTC-3  Brasília
+*    ^UTC-4  Amazônia
+*    ^UTC-5  Acre
+
+*  -Colocar configuração de horário de verão
+*    ^Usar automático
+*    ^Não usar
+  
+  -Passar o Udp.begin para o System
+
 -Arranjar uma forma de resetar o shield ethernet após o setup;
+-Fazer o backlight se manter sempre acesso;
+-Remover as setinhas do Menu;
 
 Para o futuro:
 - Configurar NTP para tcp ou udp (agora só tem udp)

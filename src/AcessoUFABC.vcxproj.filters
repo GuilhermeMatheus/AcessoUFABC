@@ -123,6 +123,9 @@
     <ClInclude Include="AT24C256RegWriter.h">
       <Filter>Header Files\IAccessRegWriter</Filter>
     </ClInclude>
+    <ClInclude Include="DateTimeAdapter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyPadListener.cpp">
@@ -163,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="AT24C256RegWriter.cpp">
       <Filter>Source Files\IAccessRegWriter</Filter>
+    </ClCompile>
+    <ClCompile Include="DateTimeAdapter.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
