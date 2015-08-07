@@ -252,11 +252,11 @@ bool System::DT_setUseNTP(bool value)
 	return true;
 }
 
-uint8_t System::DT_getTimeZone()
+uint8_t System::DT_getTimeZoneOffset()
 {
 	return EEPROM.read( OFFSET_DT_TimeZone );
 }
-bool System::DT_setTimeZone(uint8_t value)
+bool System::DT_setTimeZoneOffset( uint8_t value )
 {
 	EEPROM.write( OFFSET_DT_TimeZone, value );
 	return true;

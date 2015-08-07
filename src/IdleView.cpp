@@ -10,8 +10,14 @@ void IdleView::OnDraw()
 {
 	lcd->clear();
 	
-	String time = this->DateProvider->ToString();
-	
+	DateTime dt = this->DateProvider->GetDateTime();
+	dt = DateTimeAdapter::ToLocalTime(dt);
+
+	String time;
+	DateTimeAdapter::ToString(dt, time);
+
+	_LOGS(time);
+
 	this->lcd->print(time);
 
 	this->lcd->setCursor(0, 1);

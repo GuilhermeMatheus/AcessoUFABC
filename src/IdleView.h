@@ -5,6 +5,7 @@
 
 #include "ViewBase.h"
 #include "IDateTimeProvider.h"
+#include "DateTimeAdapter.h"
 
 /**
 * Classe responsável por exibir a data e hora no display da controladora enquanto estiver em IDLE.

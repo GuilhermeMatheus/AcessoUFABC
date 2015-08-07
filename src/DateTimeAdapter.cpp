@@ -1,18 +1,38 @@
 #include "DateTimeAdapter.h"
 
 DateTime DateTimeAdapter::ToUTC( DateTime value ) {
-	return DateTime();
+	int hour = value.hour(),
+		day = value.day(),
+		month = value.month(),
+		year = value.year(),
+		dow = value.dayOfWeek() - 1;
+
+	int daylightSavingOffset = IsDaylightSaving(day, month, year, dow) ? -1 : 0;
+	int timeZoneOffset = System::DT_getTimeZoneOffset();
+
+	int offset = timeZoneOffset + daylightSavingOffset;
+
+	SubtractHours( &hour, &day, &month, &year, offset );
+
+	return DateTime(year, month, day, hour, value.minute(), value.second());
 }
 
 DateTime DateTimeAdapter::ToLocalTime( DateTime value ) {
-	int day = value.day(), month = value.month(), year = value.year(), dow = value.dayOfWeek - 1;
+	int hour = value.hour(),
+		day = value.day(),
+		month = value.month(),
+		year = value.year(),
+		dow = value.dayOfWeek() - 1;
 
 	int daylightSavingOffset = IsDaylightSaving(day, month, year, dow) ? -1 : 0;
-	int timeZoneOffset = System::DT_getTimeZone();
+	int timeZoneOffset = System::DT_getTimeZoneOffset();
 
+	int offset = timeZoneOffset + daylightSavingOffset;
 
+	//As our time zones are UTC+2, +3, +4 and +5, offset is always > 0
+	AddHours( &hour, &day, &month, &year, offset );
 
-	return DateTime();
+	return DateTime(year, month, day, hour, value.minute(), value.second());
 }
 
 int DateTimeAdapter::ToString( DateTime value, String &target ) {
@@ -44,6 +64,48 @@ int DateTimeAdapter::ToString( DateTime value, String &target ) {
 	target.concat(value.year());
 
 	return 1;
+}
+
+#pragma region InternalMethods
+void DateTimeAdapter::AddHours(int *hour, int *day, int *month, int *year, int hours) {
+	int sumHours = (*hour + hours);
+
+	if ( sumHours < 24) {
+		*hour = sumHours;
+	}
+	else {
+		int days = sumHours / 24;
+		*hour  = sumHours % 24;
+
+		AddDays( day, month, year, days);
+	}
+}
+
+void DateTimeAdapter::AddDays( int *day, int *month, int *year, int days ) {
+	int monthDays = MonthDays(*month, *year);
+	int sumDays = *day + days;
+
+	if (sumDays <= monthDays) {
+		*day = sumDays;
+	}
+	else {
+		int months = sumDays / monthDays;
+		*day  = sumDays % monthDays;
+
+		AddMonths( month, year, months);
+	}
+}
+
+void DateTimeAdapter::AddMonths( int *month, int *year, int months ) {
+	int sumMonths = *month + months;
+	
+	if (sumMonths <= 12) {
+		*month = sumMonths;
+	}
+	else {
+		*month = sumMonths % 12;
+		*year = *year + sumMonths / 12;
+	}
 }
 
 // Algoritmo de Meeus/Jones/Butcher
@@ -96,7 +158,12 @@ void DateTimeAdapter::SubtractHours(int *hour, int *day, int *month, int *year, 
 	if (*hour > hours) {
 		*hour = *hour- hours;
 	}
+	else {
+		*hour = 24 - (hours - *hour);
+		SubtractDays(day, month, year, 1);
+	}
 }
+
 void DateTimeAdapter::SubtractDays( int *day, int *month, int *year, int days ) {
 	while (days > 0) {
 		if (*day > days) {
@@ -169,3 +236,4 @@ bool DateTimeAdapter::IsDaylightSaving( int day, int month, int year, int dow ) 
 	}
 	return false;
 }
+#pragma endregion

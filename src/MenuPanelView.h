@@ -21,6 +21,7 @@
 #include "NTPDateTimeProvider.h"
 #include "IIDProvider.h"
 #include "RTClib.h"
+#include "DateTimeAdapter.h"
 
 /**
 * Classe responsável por exibir e interfacear as configurações do sistema com o usuário.

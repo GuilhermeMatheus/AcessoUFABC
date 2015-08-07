@@ -310,8 +310,11 @@ void okMenuDataHoraAjustarData( MenuPanelView *mpv ) {
 	}
 
 	DateTime dateTime = System::DT_getDateTime( mpv->rtc );
+	dateTime = DateTimeAdapter::ToLocalTime( dateTime );
+
 	DateTime newdateTime = editTemplateDateTime( F( "Data e hora:" ), dateTime, mpv );
-	
+	newdateTime = DateTimeAdapter::ToUTC( newdateTime );
+
 	System::DT_setDateTime( newdateTime, mpv->rtc );
 }
 void okMenuDataHoraHorarioVerao( MenuPanelView *mpv ) {
@@ -324,11 +327,6 @@ void okMenuDataHoraHorarioVerao( MenuPanelView *mpv ) {
 	System::DT_setAutoDaylightSaving( newDST );
 }
 void okMenuDataHoraFusoHorario( MenuPanelView *mpv ) {
-	//[ ]Noronha  UTC2
-	//[*]Brasilia UTC3
-	//[ ]Amazonia UTC4
-	//[ ]Acre     UTC5
-	
 	static const __FlashStringHelper *OPTIONS[] = {
 		F( "Noronha  UTC2" ),
 		F( "Brasilia UTC3" ),
@@ -337,11 +335,13 @@ void okMenuDataHoraFusoHorario( MenuPanelView *mpv ) {
 	};
 
 	int countOptions = 4;
-	uint8_t timeZone = System::DT_getTimeZone();
+	uint8_t offset = System::DT_getTimeZoneOffset();
 
-	uint8_t newTimeZone = editTemplateOptionList( OPTIONS, countOptions, timeZone, mpv );
+	uint8_t newOffset = editTemplateOptionList( OPTIONS, countOptions, offset - 2, mpv );
 	
-	System::DT_setTimeZone( newTimeZone );
+	newOffset += 2;
+
+	System::DT_setTimeZoneOffset( newOffset );
 }
 void okMenuDataHoraServidorNTP( MenuPanelView *mpv ) {
 	if ( !System::DT_getUseNTP() ) {
@@ -756,7 +756,7 @@ DateTime editTemplateDateTime( const __FlashStringHelper * editorDisplay, DateTi
 		current.minute(),
 		current.day(),
 		current.month(),
-		current.year() % 100 // As "2147483647 % 100 = 47", you can ignore narrowing conversion  warning
+		current.year() % 100 // As (2147483647 % 100) = 47 < 255, you can ignore narrowing conversion  warning
 	};
 #pragma warning( pop ) //Woverflow
 	
