@@ -58,6 +58,7 @@ namespace root {
 		if (menuButtonPressedTime < 1000)
 			return;
 
+		System::LED_GREEN_OFF();
 		_menuConfiguration->Active();
 		_idleView->ViewChanged();
 	}
@@ -69,14 +70,16 @@ namespace root {
 		if (isCardPresent < 0)
 			return;
 
+		System::LED_GREEN_OFF();
 		_guardianKeeper->AllowAccess( id );
 		_idleView->ViewChanged();
 	}
 
-	void checkNtpServer( bool checkConstraints = true ) {
+	void checkNtpServer( bool checkConstraints ) {
 		DateTime now;
 
 		if ( _ntpDateTimeProvider->TryGetDateTime( now, checkConstraints ) ) {
+			System::LED_GREEN_OFF();
 			System::DT_setDateTime( now, _rtc );
 			_idleView->ViewChanged();
 		}
@@ -142,10 +145,12 @@ void setup() {
 }
 
 void loop() {
+	System::LED_GREEN_ON();
+	
 	root::_menuConfiguration->Loop();
 	root::_idleView->Draw();
 
 	root::checkMenuRequest();
 	root::checkCardReader();
-	root::checkNtpServer();
+	root::checkNtpServer(true);
 }

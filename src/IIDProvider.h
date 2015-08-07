@@ -28,8 +28,6 @@ public:
 	* @return Retorna 1 se um novo ID estiver disponível no tempo determinado ou, caso contrário, retorna -1.
 	*/
 	virtual int				WaitForNextID( byte &value, long timeLimit ) {
-		System::LED_GREEN_ON();
-
 		int result = 1;
 		long elapsed = 0;
 
@@ -42,7 +40,6 @@ public:
 			}
 		}
 
-		System::LED_GREEN_OFF();
 		return result;
 	}
 
