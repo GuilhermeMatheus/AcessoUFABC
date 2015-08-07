@@ -12,7 +12,7 @@ DateTime DateTimeAdapter::ToUTC( DateTime value ) {
 
 	int offset = timeZoneOffset + daylightSavingOffset;
 
-	SubtractHours( &hour, &day, &month, &year, offset );
+	AddHours( &hour, &day, &month, &year, -offset );
 
 	return DateTime(year, month, day, hour, value.minute(), value.second());
 }
@@ -29,8 +29,7 @@ DateTime DateTimeAdapter::ToLocalTime( DateTime value ) {
 
 	int offset = timeZoneOffset + daylightSavingOffset;
 
-	//As our time zones are UTC+2, +3, +4 and +5, offset is always > 0
-	AddHours( &hour, &day, &month, &year, offset );
+	SubtractHours( &hour, &day, &month, &year, -offset );
 
 	return DateTime(year, month, day, hour, value.minute(), value.second());
 }

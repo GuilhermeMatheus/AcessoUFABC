@@ -27,11 +27,11 @@ bool NTPDateTimeProvider::TryGetDateTime( DateTime &target, bool checkConstraint
 	else { _LOG("NTP fail"); }
 
 	if ( result ) {
-		backoffExponent = 27; //2^27 = 134217728 millis = 1,5 days
+		backoffExponent = 11; //2^11 * 60000 = 122 880 000 millis = 1.42 days
 		lastCheckBackoff = millis();
 	}
 	
-	else if ( checkConstraints && backoffExponent < 6 ) 
+	else if ( checkConstraints && backoffExponent < 6 ) //2^6 * 60000 = 3 840 000 millis = 64 minutes
 		backoffExponent += 1;
 	
 	return result;
@@ -50,7 +50,7 @@ bool NTPDateTimeProvider::CheckConstraints() {
 bool NTPDateTimeProvider::CheckBackoff() {
 	long now = millis();
 	long threshold = lastCheckBackoff + ( 60000 * ( 1 << backoffExponent ) );
-	
+
 	return now > threshold;
 }
 
@@ -67,15 +67,15 @@ bool NTPDateTimeProvider::SetInternalTimeAndDate() {
 	int maxTries = 20;
 	
 	while (maxTries > 0) {
-		if (Udp->parsePacket() == 48) {
+		if (Udp->parsePacket() == 48)
 			break;
-		}
+
 		--maxTries;
 		delay(100);
 	}
 
-	if (maxTries == 0) {
-		_LOG("No response from the server!");
+	if ( maxTries == 0 ) {
+		_LOG( "No response from the server!" );
 	} else {
 		Udp->read( packetBuffer, NTP_PACKET_SIZE );
 		
@@ -86,30 +86,6 @@ bool NTPDateTimeProvider::SetInternalTimeAndDate() {
 		epoch = highWord << 16 | lowWord;
 		epoch = epoch - 2208988800;
 		setTime( epoch );
-
-//DEBUG
-unsigned long secsSince1900 = highWord << 16 | lowWord;
-Serial.print("Seconds since Jan 1 1900 = ");
-Serial.println(secsSince1900);
-
-Serial.print("Unix time = ");
-const unsigned long seventyYears = 2208988800UL;
-epoch = secsSince1900 - seventyYears;
-Serial.println(epoch);
-
-Serial.print("The UTC time is ");       // UTC is the time at Greenwich Meridian (GMT)
-Serial.print((epoch % 86400L) / 3600); // print the hour (86400 equals secs per day)
-Serial.print(':');
-if (((epoch % 3600) / 60) < 10) {
-	Serial.print('0');
-}
-Serial.print((epoch % 3600) / 60); // print the minute (3600 equals secs per minute)
-Serial.print(':');
-if ((epoch % 60) < 10) {
-	Serial.print('0');
-}
-Serial.println(epoch % 60); // print the second
-//END DEBUG
 		
 		return true;
 	}
@@ -118,8 +94,8 @@ Serial.println(epoch % 60); // print the second
 }
 
 void NTPDateTimeProvider::SendNTPpacket() {
-	byte timeServerIP[4];
-	System::DT_loadNTPIpAddressInto( timeServerIP );
+	byte timeServerIP[4] = { 172, 17, 45, 77 };
+	//System::DT_loadNTPIpAddressInto( timeServerIP );
 	
 	IPAddress timeServer( timeServerIP );
 	

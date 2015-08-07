@@ -328,20 +328,20 @@ void okMenuDataHoraHorarioVerao( MenuPanelView *mpv ) {
 }
 void okMenuDataHoraFusoHorario( MenuPanelView *mpv ) {
 	static const __FlashStringHelper *OPTIONS[] = {
-		F( "Noronha  UTC2" ),
-		F( "Brasilia UTC3" ),
-		F( "Amazonia UTC4" ),
-		F( "Acre     UTC5" )
+		F( "Noronha  UTC2" ), // -2
+		F( "Brasilia UTC3" ), // -3
+		F( "Amazonia UTC4" ), // -4
+		F( "Acre     UTC5" )  // -5
 	};
 
 	int countOptions = 4;
-	uint8_t offset = System::DT_getTimeZoneOffset();
+	int8_t offset = System::DT_getTimeZoneOffset();
 
-	uint8_t newOffset = editTemplateOptionList( OPTIONS, countOptions, offset - 2, mpv );
+	uint8_t newOffset = editTemplateOptionList( OPTIONS, countOptions, -offset - 2, mpv );
 	
-	newOffset += 2;
+	newOffset = newOffset + 2;
 
-	System::DT_setTimeZoneOffset( newOffset );
+	System::DT_setTimeZoneOffset( -newOffset );
 }
 void okMenuDataHoraServidorNTP( MenuPanelView *mpv ) {
 	if ( !System::DT_getUseNTP() ) {

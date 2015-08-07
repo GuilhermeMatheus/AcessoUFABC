@@ -411,11 +411,11 @@ DateTime settings.
 	/**
 	* UNDONE doc
 	*/
-	static uint8_t			DT_getTimeZoneOffset(); //As we'll allow only positive UTC offsets, unsigned integer fits well
+	static int8_t			DT_getTimeZoneOffset();
 	/**
 	* UNDONE doc
 	*/
-	static bool				DT_setTimeZoneOffset( uint8_t value ); //As we'll allow only positive UTC offsets, unsigned integer fits well
+	static bool				DT_setTimeZoneOffset( int8_t value );
 
 	
 	/**
