@@ -395,18 +395,24 @@ DateTime settings.
 	static bool				DT_setUseNTP( bool value );
 
 	/**
-	* Acessa o flag de cálculo do horário de verão automático.
+	* Acessa o campo de cálculo do horário de verão automático.
 	* 
-	* @return True quando o cálculo de horário de verão for automático, caso contrário, False.
+	* @return Retorna o modo de horário de verão usado pela controladora:
+	*			   0 - automático;
+	*			   1 - dentro do horário de verão,
+	*			   2 - fora do horário de verão
 	*/
-	static bool				DT_getAutoDaylightSaving();
+	static uint8_t				DT_getAutoDaylightSaving();
 	/**
-	* Sobrescreve o flag Acessa o flag de cálculo do horário de verão automático.
+	* Sobrescreve o campo do modo de horário de verão.
 	* 
-	* @param value O novo flag a ser salvo na controladora.
+	* @param value O novo valor a ser salvo na controladora. O valor deve ser:
+	*			   0 - automático;
+	*			   1 - dentro do horário de verão,
+	*			   2 - fora do horário de verão
 	* @return True quando o valor for atualizado com sucesso ou, caso contrário, False.
 	*/
-	static bool				DT_setAutoDaylightSaving( bool value );
+	static bool				DT_setAutoDaylightSaving( uint8_t value );
 
 	/**
 	* UNDONE doc

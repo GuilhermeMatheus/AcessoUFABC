@@ -206,13 +206,21 @@ int DateTimeAdapter::ThirdSunday( int month, int year ) {
 }
 
 bool DateTimeAdapter::IsDaylightSaving( int day, int month, int year, int dow ) {
-	if (dow == -1) {
-		dow = DayOfTheWeek(day, month, year);
-	}
 
-	if (month == 11 || month == 12 || month == 1) {
+	uint8_t dlsMode = System::DT_getAutoDaylightSaving();
+	
+	if (dlsMode == 1) 
+		return true;  //In daylightSaving, by manual configuration
+	
+	if (dlsMode == 2) 
+		return false; //Not in daylightSaving, by manual configuration
+
+	if (dow == -1)
+		dow = DayOfTheWeek(day, month, year);
+
+	if (month == 11 || month == 12 || month == 1)
 		return true;
-	}
+
 	if (month == 10) {
 		if (day < 15) return false;
 		if (day >= 21) return true;

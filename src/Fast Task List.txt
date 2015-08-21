@@ -2,10 +2,10 @@
 	-Normalmente Aberto N.A.
 	-Normalmente Fechado N.F.
 
--Horário de verão:
-	-Sim
-	-Não
-	-Auto
+*-Horário de verão:
+*	 -Sim
+*	 -Não
+*	 -Auto
 
 
 *Após encontro com o Rodrigo:

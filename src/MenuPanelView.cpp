@@ -318,13 +318,18 @@ void okMenuDataHoraAjustarData( MenuPanelView *mpv ) {
 	System::DT_setDateTime( newdateTime, mpv->rtc );
 }
 void okMenuDataHoraHorarioVerao( MenuPanelView *mpv ) {
-	bool ntpFlag = System::DT_getAutoDaylightSaving();
-	String sSim = "Sim";
-	String sNao = "Nao";
+	static const __FlashStringHelper *OPTIONS[] = {
+		F( "Automatico" ),
+		F( "Sim" ),
+		F( "Nao" )
+	};
+	
+	int countOptions = 3;
+	uint8_t dls = System::DT_getAutoDaylightSaving();
+	
+	uint8_t newDLS = editTemplateOptionList( OPTIONS, countOptions, dls, mpv );
 
-	bool newDST = editTemplateFlag( F( "Usar automatico:" ), sSim, sNao, ntpFlag, mpv );
-
-	System::DT_setAutoDaylightSaving( newDST );
+	System::DT_setAutoDaylightSaving( newDLS );
 }
 void okMenuDataHoraFusoHorario( MenuPanelView *mpv ) {
 	static const __FlashStringHelper *OPTIONS[] = {
@@ -538,7 +543,7 @@ uint8_t editTemplateOptionList( const __FlashStringHelper *options[],
 		int optLine1 = page * 2;
 		int optLine2 = optLine1 + 1;
 
-		mpv->lcd->setCursor( 0, 0 );
+		mpv->lcd->clear();
 		mpv->lcd->print( getBkstFor(optLine1 == selected) );
 		mpv->lcd->print( options[optLine1] );
 

@@ -262,17 +262,15 @@ bool System::DT_setTimeZoneOffset( int8_t value )
 	return true;
 }
 
-
-bool System::DT_getAutoDaylightSaving()
+uint8_t System::DT_getAutoDaylightSaving()
 {
-	return EEPROM.read(OFFSET_DT_DaylightSaving) == 1;
+	return EEPROM.read(OFFSET_DT_DaylightSaving);
 }
-bool System::DT_setAutoDaylightSaving(bool value)
+bool System::DT_setAutoDaylightSaving(uint8_t value)
 {
-	EEPROM.write(OFFSET_DT_DaylightSaving, value ? 1 : 0 );
+	EEPROM.write(OFFSET_DT_DaylightSaving, value );
 	return true;
 }
-
 
 uint32_t System::DT_getNTPIpAddress()
 {
