@@ -1,6 +1,6 @@
--Tipo de Acionamento:
-	-Normalmente Aberto N.A.
-	-Normalmente Fechado N.F.
+*-Tipo de Acionamento:
+*	-Normalmente Aberto N.A.
+*	-Normalmente Fechado N.F.
 
 *-Horário de verão:
 *	 -Sim

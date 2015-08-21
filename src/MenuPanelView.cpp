@@ -486,8 +486,8 @@ void okMenuServidorComputador( MenuPanelView *mpv ) {
 #pragma region Actuation Menu 
 void okMenuAcionamentoTipo( MenuPanelView *mpv ) {
 	bool actFlag = System::ACT_getType();
-	String sAberto = "Abrt";
-	String sFechado = "Fechd";
+	String sAberto = "N.A.";
+	String sFechado = "N.F.";
 	bool newActFlag = editTemplateFlag( F( "Tipo Acionamento" ), sAberto, sFechado, actFlag, mpv );
 	
 	System::ACT_setType(newActFlag);

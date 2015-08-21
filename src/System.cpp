@@ -195,6 +195,8 @@ bool System::ACT_getType()
 bool System::ACT_setType(bool value)
 {
 	EEPROM.write(OFFSET_ACT_Type, value);
+	CloseGate();
+
 	return true;
 }
 
