@@ -60,7 +60,7 @@ int DateTimeAdapter::ToString( DateTime value, String &target ) {
 	target.concat(value.month());
 	target.concat(_barra);
 
-	target.concat(value.year());
+	target.concat(value.year() - 2000);
 
 	return 1;
 }

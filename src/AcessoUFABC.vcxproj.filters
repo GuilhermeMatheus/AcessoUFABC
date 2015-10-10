@@ -105,9 +105,6 @@
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Visual Micro\.src.vsarduino.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EepromAccessProvider.h">
       <Filter>Header Files\Access</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="DateTimeAdapter.h">
       <Filter>Header Files\DateTime</Filter>
+    </ClInclude>
+    <ClInclude Include="__vm\.src.vsarduino.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -7,8 +7,9 @@
 
 #define UP_ARROW_IDX				0
 #define DOWN_ARROW_IDX				1
-#define RIGHT_ARROW_IDX				2
-#define LEFT_ARROW_IDX				3
+#define CLOCK_IDX					2
+//#define RIGHT_ARROW_IDX				2
+//#define LEFT_ARROW_IDX				3
 
 
 class ViewBase
@@ -45,17 +46,18 @@ public:
 
 	static void InitDisplay( LiquidCrystal_I2C *lcd ){
 		lcd->init();
-		lcd->backlight();
 
-		byte Down_ArrowDef[8] = { B00000, B00000, B00000, B11111, B01110, B00100, B00000, B00000 };
 		byte Up_ArrowDef[8] = { B00000, B00000, B00100, B01110, B11111, B00000, B00000, B00000 };
-		byte Right_ArrowDef[8] = { B00000, B01000, B01100, B01110, B01110, B01100, B01000, B00000 };
-		byte Left_ArrowDef[8] = { B00000, B00010, B00110, B01110, B01110, B00110, B00010, B00000 };
+		byte Down_ArrowDef[8] = { B00000, B00000, B00000, B11111, B01110, B00100, B00000, B00000 };
+		byte Clock_Def[8] = { 0x0, 0xe, 0x15, 0x17, 0x11, 0xe, 0x0 };
+		//byte Right_ArrowDef[8] = { B00000, B01000, B01100, B01110, B01110, B01100, B01000, B00000 };
+		//byte Left_ArrowDef[8] = { B00000, B00010, B00110, B01110, B01110, B00110, B00010, B00000 };
 
 		lcd->createChar( UP_ARROW_IDX, Up_ArrowDef );
-		lcd->createChar( DOWN_ARROW_IDX, Down_ArrowDef );
-		lcd->createChar( LEFT_ARROW_IDX, Left_ArrowDef );
-		lcd->createChar( RIGHT_ARROW_IDX, Right_ArrowDef );
+		lcd->createChar( DOWN_ARROW_IDX, Down_ArrowDef);
+		lcd->createChar( CLOCK_IDX, Clock_Def );
+		//lcd->createChar( LEFT_ARROW_IDX, Left_ArrowDef );
+		//lcd->createChar( RIGHT_ARROW_IDX, Right_ArrowDef );
 
 		lcd->clear();
 	}

@@ -18,6 +18,8 @@ void IdleView::OnDraw()
 
 	_LOGS(time);
 
+	this->lcd->write( CLOCK_IDX );
+	this->lcd->print(' ');
 	this->lcd->print(time);
 
 	this->lcd->setCursor(0, 1);

@@ -1030,17 +1030,13 @@ void MenuPanelView::OnDraw() {
 	this->lcd->print( activatedMenuOption[currentMenuIndex].text );
 
 	this->lcd->setCursor( 0, 1 );
-	this->lcd->print( F( "*Y#N 2" ) );
-	this->lcd->write( byte( UP_ARROW_IDX ) );
+	this->lcd->print(F("2"));
+	this->lcd->write( UP_ARROW_IDX );
 	
 	this->lcd->print( F( " 8") );
-	this->lcd->write( byte( DOWN_ARROW_IDX ) );
-
-	this->lcd->print( F( " 6" ) );
-	this->lcd->write( byte( RIGHT_ARROW_IDX ) );
+	this->lcd->write( DOWN_ARROW_IDX );
 	
-	this->lcd->print( F( " 4" ) );
-	this->lcd->write( byte( LEFT_ARROW_IDX ) );
+	this->lcd->print( F( "  *Ok #Back" ) );
 }
 
 bool MenuPanelView::HasNewFrame() {
