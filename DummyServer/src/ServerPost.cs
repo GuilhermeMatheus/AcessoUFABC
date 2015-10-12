@@ -7,17 +7,19 @@ namespace UFABC.AccessController.Server
 {
     public class ServerPost
     {
-        ControllerPost c;
-        bool allowAccess;
+        private ControllerPost c;
+        private bool allowAccess;
+        private string message;
 
-        ServerPost() { }
+        private ServerPost() { }
 
-        public static ServerPost FromClientMessage(ControllerPost clientMessage, bool allowAccess)
+        public static ServerPost FromClientMessage(ControllerPost clientMessage, string message, bool allowAccess)
         {
             return new ServerPost
             {
                 c = clientMessage,
-                allowAccess = allowAccess
+                allowAccess = allowAccess,
+                message = message
             };
         }
 
@@ -29,7 +31,7 @@ namespace UFABC.AccessController.Server
                 "0;51;E",
                 allowAccess ? "L" : "B",
                 c.Card,
-               (allowAccess ? "ACESSO PERMITIDO" : "ACESSO NEGADO").PadLeft(32, '-'),
+                message,
                 "3"
             };
 
